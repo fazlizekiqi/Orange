@@ -7,14 +7,14 @@ public class ServerSideGame {
 
     ServerSidePlayer currentPlayer;
     String[] questions; // tills vi har en riktig klass
-    int questionNumber = 0;
-    int playerOnePoints = 0;
-    int playerTwoPoints = 0;
+    private int questionNumber = 0;
+    private int playerOnePoints = 0;
+    private int playerTwoPoints = 0;
 
-    static int SELECTING_CATEGORY = 0;
-    static int ASKING_QUESTIONS = 1;
-    static int ALL_QUESTIONS_ANSWERED = 2;
-    int currentState = SELECTING_CATEGORY;
+    private static int SELECTING_CATEGORY = 0;
+    private static int ASKING_QUESTIONS = 1;
+    private static int ALL_QUESTIONS_ANSWERED = 2;
+    private int currentState = SELECTING_CATEGORY;
 
     // TODO Avgör hur exceptions ska hanteras
     // TODO synchronized?
