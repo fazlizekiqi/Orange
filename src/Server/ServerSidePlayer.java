@@ -27,8 +27,14 @@ public class ServerSidePlayer extends Thread {
         }
     }
 
+    public void setOponentPlayer(ServerSidePlayer oponentPlayer) {
+        this.oponentPlayer = oponentPlayer;
+    }
+
     @Override
     public void run() {
+        //TODO
+
 
     }
 }

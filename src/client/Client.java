@@ -13,12 +13,14 @@ import javax.swing.JPanel;
 
 public class Client extends JFrame {
 
+//172.20.202.126
+
     JLabel label=new JLabel("Vad heter du?");
     JButton[] buttons;
     String[] alternativ={"Fazli","Johan","VictorO","VictorJ"};
     JPanel panel=new JPanel();
-//    Socket socket=new Socket("localhost",56565);
-//    PrintWriter pw=new PrintWriter(socket.getOutputStream(),true);
+    Socket socket=new Socket("localhost",56565);
+    PrintWriter pw=new PrintWriter(socket.getOutputStream(),true);
 
     public Client() throws IOException {
 
@@ -35,13 +37,13 @@ public class Client extends JFrame {
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
+
     }
 
 
     ActionListener clientListener=e->{
         JButton temp=(JButton) e.getSource();
-        System.out.println(temp.getText());
-//        pw.println(temp.getText());
+        pw.println(temp.getText());
     };
 
 
