@@ -25,7 +25,6 @@ public class Client extends JFrame {
 
     public Client() throws IOException {
 
-
         buttons = new JButton[4];
         add(label, BorderLayout.NORTH);
         for (int i = 0; i < buttons.length; i++) {
@@ -37,6 +36,7 @@ public class Client extends JFrame {
         setSize(400, 400);
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+        gameLoop();
     }
 
     public void gameLoop() {
@@ -47,9 +47,15 @@ public class Client extends JFrame {
                 if (obj instanceof Questions) {
                     Questions q = (Questions) obj;
                     //label.setText(q.getQuestion);
-
+                    //TODO display buttons and make them visible/invisible
+                } else if (obj instanceof String) {
+                    String messageFromTheServer = (String) obj;
+                    System.out.println(messageFromTheServer);
+                } else if (obj instanceof Integer[]) {
+                    Integer[] points = (Integer[]) obj;
+                    System.out.println("Spelare 1 points :" + points[0]);
+                    System.out.println("Spelare 2 points :" + points[1]);
                 }
-
             }
         } catch (IOException e) {
             e.printStackTrace();
