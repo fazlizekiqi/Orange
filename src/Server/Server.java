@@ -16,7 +16,7 @@ public class Server {
 
         while(true){
 
-            ServerSideGame game=new ServerSideGame();
+            ServerSideGame game=new ServerSideGame(1,1);
 
             ServerSidePlayer player1=new ServerSidePlayer(listener.accept(),"Player 1",game);
             ServerSidePlayer player2=new ServerSidePlayer(listener.accept(),"Player 2",game);

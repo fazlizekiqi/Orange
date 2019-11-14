@@ -4,6 +4,7 @@ import Question.Question;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Category {
     ArrayList<Question> questions = new ArrayList<Question>();
@@ -16,6 +17,7 @@ public class Category {
             File file = new File(path);
             BufferedReader in = new BufferedReader(new FileReader(file));
             while ((firstLine = in.readLine()) != null) {
+                tempQuestion = new Question();
                 tempQuestion.setQuestion(firstLine);
                 secondLine = in.readLine();
                 String[] altA = secondLine.split(",");
@@ -23,6 +25,7 @@ public class Category {
                 for (int i = 0; i < altA.length; i++) {
                     tempQuestion.alternatives.add(altA[i]);
                 }
+                Collections.shuffle(tempQuestion.alternatives);
                 questions.add(tempQuestion);
             }
         } catch (FileNotFoundException e) {
