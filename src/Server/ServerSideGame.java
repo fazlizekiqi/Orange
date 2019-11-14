@@ -5,15 +5,15 @@ import java.io.IOException;
 // klass med regler for spelet
 public class ServerSideGame {
 
-    ServerSidePlayer currentPlayer;
-    String[] questions; // tills vi har en riktig klass
+    private ServerSidePlayer currentPlayer;
+    private String[] questions; // tills vi har en riktig klass
     private int questionNumber = 0;
     private int playerOnePoints = 0;
     private int playerTwoPoints = 0;
 
-    private static int SELECTING_CATEGORY = 0;
-    private static int ASKING_QUESTIONS = 1;
-    private static int ALL_QUESTIONS_ANSWERED = 2;
+    private static final int SELECTING_CATEGORY = 0;
+    private static final int ASKING_QUESTIONS = 1;
+    private static final int ALL_QUESTIONS_ANSWERED = 2;
     private int currentState = SELECTING_CATEGORY;
 
     // TODO Avgör hur exceptions ska hanteras
@@ -32,6 +32,8 @@ public class ServerSideGame {
                     // Lägg till poäng
                 }
                 currentPlayer = currentPlayer.oponentPlayer;
+            } else if (currentState == ALL_QUESTIONS_ANSWERED) {
+                // Avsluta rundan, börja på nästa
             }
         }
     }
