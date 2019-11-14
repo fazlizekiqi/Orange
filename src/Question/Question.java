@@ -20,4 +20,8 @@ public class Question {
     public void setRightAnswer(String rightAnswer) {
         this.rightAnswer = rightAnswer;
     }
+
+    public String getQuestion() {
+        return question;
+    }
 }
