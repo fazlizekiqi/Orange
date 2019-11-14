@@ -10,4 +10,14 @@ public class Question {
 
     ArrayList<String> alternatives = new ArrayList<String>();
 
+    public Question() {
+    }
+
+    public void setQuestion(String question) {
+        this.question = question;
+    }
+
+    public void setRightAnswer(String rightAnswer) {
+        this.rightAnswer = rightAnswer;
+    }
 }
