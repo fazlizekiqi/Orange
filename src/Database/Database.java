@@ -1,16 +1,15 @@
 package Database;
 
 import Question.Question;
-import java.util.LinkedList;
 import java.util.List;
 
 public class Database {
 
 
-    Category candy = new Category("src/CandyQuiz.txt");
-    Category egg = new Category("src/EggQuiz.txt");
-    Category famous = new Category("src/FamousQuiz.txt");
-    Category random = new Category("src/RandomQuiz.txt");
+    Category candy = new Category("catagoryFiles\\CandyQuiz.txt");
+    Category egg = new Category("catagoryFiles\\EggQuiz.txt");
+    Category famous = new Category("catagoryFiles\\FamousQuiz.txt");
+    Category random = new Category("catagoryFiles\\RandomQuiz.txt");
 
 
     public List<Question> getQuestions(String searchedCategory, int antalFrågor) {
