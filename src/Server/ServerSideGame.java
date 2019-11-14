@@ -1,5 +1,6 @@
 package Server;
 
+import Database.Database;
 import Question.Question;
 
 import java.io.IOException;
@@ -8,6 +9,7 @@ import java.util.List;
 // klass med regler for spelet
 public class ServerSideGame {
 
+    Database questionDB = new Database();
     ServerSidePlayer currentPlayer;
     private List<Question> questions;
     private int questionNumber = 0;
@@ -38,7 +40,7 @@ public class ServerSideGame {
         currentState = SELECTING_CATEGORY;
         while (true) {
             if (currentState == SELECTING_CATEGORY) {
-                String category = getCategoryName(currentPlayer);
+                String categoryName = getCategoryName(currentPlayer);
                 // Hämta rondens frågor
                 // Något i stil med Database.getQuestions(antal, kategori)
                 currentState = ASKING_FIRST_PLAYER;
@@ -83,10 +85,15 @@ public class ServerSideGame {
         }
     }
 
-    void sendResults(ServerSidePlayer player) throws IOException {
+    // OBS Resultatens inbördes ordning
+    void sendResults(ServerSidePlayer player) {
         // TODO Formatera resultaten ordentligt
         Integer[] results = {player.points, player.oponentPlayer.points};
-        player.output.writeObject(results);
+        try {
+            player.output.writeObject(results);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
