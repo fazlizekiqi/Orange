@@ -5,7 +5,7 @@ import java.io.IOException;
 // klass med regler for spelet
 public class ServerSideGame {
 
-    private ServerSidePlayer currentPlayer;
+    ServerSidePlayer currentPlayer;
     private String[] questions; // tills vi har en riktig klass
     private int questionNumber = 0;
     private int playerOnePoints = 0;
