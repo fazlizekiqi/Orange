@@ -1,6 +1,6 @@
 package client;
 
-import questions.Questions;
+import Question.Question;
 
 import javax.swing.*;
 import java.awt.*;
@@ -44,8 +44,8 @@ public class Client extends JFrame {
 
         try {
             while ((obj = in.readObject()) != null) {
-                if (obj instanceof Questions) {
-                    Questions q = (Questions) obj;
+                if (obj instanceof Question) {
+                    Question q = (Question) obj;
                     //label.setText(q.getQuestion);
                     //TODO display buttons and make them visible/invisible
                 } else if (obj instanceof String) {
