@@ -1,7 +1,7 @@
 package Server;
 
 import Database.Database;
-import Question.Question;
+import question.Question;
 
 import java.io.IOException;
 import java.util.List;

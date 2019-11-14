@@ -1,15 +1,21 @@
 package Database;
 
-import Question.Question;
+import question.Question;
 import java.util.List;
 
 public class Database {
 
 
-    Category candy = new Category("catagoryFiles\\CandyQuiz.txt");
-    Category egg = new Category("catagoryFiles\\EggQuiz.txt");
-    Category famous = new Category("catagoryFiles\\FamousQuiz.txt");
-    Category random = new Category("catagoryFiles\\RandomQuiz.txt");
+//    Category candy = new Category("catagoryFiles\\CandyQuiz.txt");
+//    Category egg = new Category("catagoryFiles\\EggQuiz.txt");
+//    Category famous = new Category("catagoryFiles\\FamousQuiz.txt");
+//    Category random = new Category("catagoryFiles\\RandomQuiz.txt");
+
+    //MAC OCH LINUX
+    Category candy = new Category("catagoryFiles/CandyQuiz.txt");
+    Category egg = new Category("catagoryFiles/EggQuiz.txt");
+    Category famous = new Category("catagoryFiles/FamousQuiz.txt");
+    Category random = new Category("catagoryFiles/RandomQuiz.txt");
 
 
     public List<Question> getQuestions(String searchedCategory, int antalFrågor) {

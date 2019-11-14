@@ -1,6 +1,6 @@
 package Database;
 
-import Question.Question;
+import question.Question;
 
 import java.io.*;
 import java.util.ArrayList;
