@@ -1,13 +1,17 @@
 package Server;
 
+import Question.Question;
+
 import java.io.IOException;
+import java.util.List;
 
 // klass med regler for spelet
 public class ServerSideGame {
 
     ServerSidePlayer currentPlayer;
-    private String[] questions; // tills vi har en riktig klass
+    private List<Question> questions;
     private int questionNumber = 0;
+    private int questionsPerRound;
     private int totalRounds;
 
     private static final int SELECTING_CATEGORY = 0;
@@ -19,6 +23,11 @@ public class ServerSideGame {
     // TODO Avgör hur exceptions ska hanteras
     // TODO synchronized?
 
+    ServerSideGame(int questionsPerRound, int totalRounds) {
+        this.questionsPerRound = questionsPerRound;
+        this.totalRounds = totalRounds;
+    }
+
     void gameLoop() throws IOException {
         for (int currentRound = 1; currentRound <= totalRounds; currentRound++) {
             playRound();
@@ -26,17 +35,16 @@ public class ServerSideGame {
     }
 
     void playRound() throws IOException {
-        // TODO Flytta till en lämplig metod (konstruktor? run? main?)
         currentState = SELECTING_CATEGORY;
         while (true) {
             if (currentState == SELECTING_CATEGORY) {
-                String category = getCategory(currentPlayer);
+                String category = getCategoryName(currentPlayer);
                 // Hämta rondens frågor
                 // Något i stil med Database.getQuestions(antal, kategori)
+                currentState = ASKING_FIRST_PLAYER;
             } else if (currentState == ASKING_FIRST_PLAYER ||
             currentState == ASKING_SECOND_PLAYER) {
-                // Notera nuvarande spelaren?
-                String answer = askQuestion(currentPlayer);
+                String answer = askQuestion(questions.get(questionNumber), currentPlayer);
                 if (answer.equals("Det rätta svaret")) {
                     currentPlayer.points++;
                 }
@@ -50,24 +58,25 @@ public class ServerSideGame {
         }
     }
 
-    String askQuestion(ServerSidePlayer player) throws IOException {
-        currentPlayer.output.writeObject(questions[questionNumber]);
+    String askQuestion(Question question, ServerSidePlayer player) throws IOException {
+        currentPlayer.output.writeObject(question);
         return player.input.readLine();
     }
 
-    String getCategory(ServerSidePlayer player) throws IOException {
+    String getCategoryName(ServerSidePlayer player) throws IOException {
         player.output.writeObject("Här frågar vi efter en kategori");
         return player.input.readLine();
     }
 
     void nextQuestion() {
-        if (questionNumber < questions.length) {
+        if (questionNumber < questions.size()) {
             questionNumber++;
         } else {
             questionNumber = 0; // Inför nästa rond
             if (currentState == ASKING_FIRST_PLAYER) {
-                currentState = ASKING_SECOND_PLAYER;
+                // Flytta state-logiken till playRound?
                 currentPlayer = currentPlayer.oponentPlayer;
+                currentState = ASKING_SECOND_PLAYER;
             } else {
                 currentState = ALL_QUESTIONS_ANSWERED;
             }
