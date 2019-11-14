@@ -8,7 +8,7 @@ public class Question {
     String question;
     String rightAnswer;
 
-    ArrayList<String> alternatives = new ArrayList<String>();
+    public ArrayList<String> alternatives = new ArrayList<String>();
 
     public Question() {
     }
