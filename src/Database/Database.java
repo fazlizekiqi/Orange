@@ -7,10 +7,10 @@ import java.util.List;
 public class Database {
 
 
-    Category candy = new Category("/Users/fazli/Desktop/Orange/src/CandyQuiz.txt");
-    Category egg = new Category("C:\\Users\\Joh\\IdeaProjects\\Orange\\src\\EggQuiz.txt");
-    Category famous = new Category("C:\\Users\\Joh\\IdeaProjects\\Orange\\src\\FamousQuiz.txt");
-    Category random = new Category("C:\\Users\\Joh\\IdeaProjects\\Orange\\src\\RandomQuiz.txt");
+    Category candy = new Category("src/CandyQuiz.txt");
+    Category egg = new Category("src/EggQuiz.txt");
+    Category famous = new Category("src/FamousQuiz.txt");
+    Category random = new Category("src/RandomQuiz.txt");
 
 
     public List<Question> getQuestions(String searchedCategory, int antalFrågor) {
@@ -26,6 +26,9 @@ public class Database {
 
     }
 
-
+    public static void main(String[] args) {
+        // Bara för att testa filsökning
+        new Database();
+    }
 
 }

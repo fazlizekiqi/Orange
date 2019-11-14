@@ -41,8 +41,7 @@ public class ServerSideGame {
         while (true) {
             if (currentState == SELECTING_CATEGORY) {
                 String categoryName = getCategoryName(currentPlayer);
-                // Hämta rondens frågor
-                // Något i stil med Database.getQuestions(antal, kategori)
+                questions = questionDB.getQuestions(categoryName, questionsPerRound);
                 currentState = ASKING_FIRST_PLAYER;
             } else if (currentState == ASKING_FIRST_PLAYER ||
             currentState == ASKING_SECOND_PLAYER) {
