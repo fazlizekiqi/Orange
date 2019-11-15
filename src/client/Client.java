@@ -100,6 +100,7 @@ public class Client extends JFrame {
                     ArrayList<String> alt = q.getAlternatives();
                     rightAnswer = q.getRightAnswer();
                     for (int i = 0; i < alt.size(); i++) {
+                        continueButton.addActionListener(cnt);
                         buttons[i].setText(alt.get(i));
                         buttons[i].addActionListener(clientListener);
                     }
@@ -126,29 +127,38 @@ public class Client extends JFrame {
 // throws IOException, ClassNotFoundException
     }//gameLoop()
 
-    ActionListener cnt =e->{
-      continueButton.setVisible(false);
+    String theAnswer;
+
+    ActionListener cnt = e -> {
+        continueButton.setVisible(false);
         for (int i = 0; i < buttons.length; i++) {
             buttons[i].setBackground(null);
+            pw.println(theAnswer);
         }
     };
 
     ActionListener clientListener = e -> {
-        continueButton.addActionListener(cnt);
 
         JButton temp = (JButton) e.getSource();
         changeColor(temp);
         continueButton.setVisible(true);
-
+        theAnswer = temp.getText();
     };//clientListener
 
     private void changeColor(JButton temp) {
         if (temp.getText().equalsIgnoreCase(rightAnswer)) {
             temp.setBackground(Color.GREEN);
+            temp.setOpaque(true);
         } else {
             temp.setBackground(Color.RED);
+            temp.setOpaque(true);
+            for (int i = 0; i < buttons.length; i++) {
+                if (buttons[i].getText().equalsIgnoreCase(rightAnswer)) {
+                    buttons[i].setBackground(Color.green);
+                    buttons[i].setOpaque(true);
+                }
+            }
         }
-        pw.println(temp.getText());
     }
 
     public static void main(String[] args) {
