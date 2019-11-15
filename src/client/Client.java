@@ -34,6 +34,7 @@ public class Client extends JFrame {
     private final String[] rung = {"1", "2", "3", "4"};
     private JComboBox runder;
     JButton button = new JButton("Start Game");
+    JButton continueButton = new JButton("Continue");
     JButton[] buttons = new JButton[4];
     String[] strings = {"Allan", "Fazli Zekiqi", "Victor J", "Victor O"};
     JLabel label = new JLabel("HÄR KOMMMER VI HA FRÅGAN?", SwingConstants.CENTER);
@@ -49,8 +50,8 @@ public class Client extends JFrame {
         in = new ObjectInputStream(socket.getInputStream());
         pw = new PrintWriter(socket.getOutputStream(), true);
 
-        gridPanel.setPreferredSize(new Dimension(500,200));
-        gridPanel.setBorder(new EmptyBorder(0,30,0,0));
+        gridPanel.setPreferredSize(new Dimension(500, 200));
+        gridPanel.setBorder(new EmptyBorder(0, 30, 0, 0));
         setLayout(new BorderLayout());
         colChooser = new JComboBox(colors);
         colChooser.setSelectedIndex(-1);
@@ -72,6 +73,8 @@ public class Client extends JFrame {
 
         }
 
+        add(continueButton, BorderLayout.SOUTH);
+        continueButton.setVisible(false);
         add(s1, BorderLayout.WEST);
         add(s2, BorderLayout.EAST);
 
@@ -94,11 +97,11 @@ public class Client extends JFrame {
                 if (obj instanceof Question) {
                     Question q = (Question) obj;
                     label.setText(q.getQuestion());
-                    ArrayList<String> alt=q.getAlternatives();
-                    rightAnswer=q.getRightAnswer();
+                    ArrayList<String> alt = q.getAlternatives();
+                    rightAnswer = q.getRightAnswer();
                     for (int i = 0; i < alt.size(); i++) {
                         buttons[i].setText(alt.get(i));
-
+                        buttons[i].addActionListener(clientListener);
                     }
 
                     //TODO display buttons and make them visible/invisible
@@ -109,7 +112,6 @@ public class Client extends JFrame {
                         colChooser.setEnabled(false);
                         pw.println(colChooser.getSelectedItem());
                     });
-
                 } else if (obj instanceof Integer[]) {
                     Integer[] points = (Integer[]) obj;
                     System.out.println("Spelare 1 points :" + points[0]);
@@ -124,15 +126,30 @@ public class Client extends JFrame {
 // throws IOException, ClassNotFoundException
     }//gameLoop()
 
-    ActionListener clientListener = e -> {
-        JButton temp = (JButton) e.getSource();
-        if(temp.getText().equalsIgnoreCase(rightAnswer))
-            temp.setBackground(Color.GREEN);
-        else
-            temp.setBackground(Color.RED);
+    ActionListener cnt =e->{
+      continueButton.setVisible(false);
+        for (int i = 0; i < buttons.length; i++) {
+            buttons[i].setBackground(null);
+        }
+    };
 
-        System.out.println(temp.getText());
+    ActionListener clientListener = e -> {
+        continueButton.addActionListener(cnt);
+
+        JButton temp = (JButton) e.getSource();
+        changeColor(temp);
+        continueButton.setVisible(true);
+
     };//clientListener
+
+    private void changeColor(JButton temp) {
+        if (temp.getText().equalsIgnoreCase(rightAnswer)) {
+            temp.setBackground(Color.GREEN);
+        } else {
+            temp.setBackground(Color.RED);
+        }
+        pw.println(temp.getText());
+    }
 
     public static void main(String[] args) {
         try {
