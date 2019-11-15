@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.List;
 
 // klass med regler for spelet
-public class ServerSideGame {
+public class ServerSideGame extends Thread {
 
     Database questionDB = new Database();
     ServerSidePlayer currentPlayer;
@@ -30,9 +30,14 @@ public class ServerSideGame {
         this.totalRounds = totalRounds;
     }
 
-    void gameLoop() throws IOException {
-        for (int currentRound = 1; currentRound <= totalRounds; currentRound++) {
-            playRound();
+    @Override
+    public void run() {
+        try {
+            for (int currentRound = 1; currentRound <= totalRounds; currentRound++) {
+                playRound();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
