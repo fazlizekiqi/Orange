@@ -28,4 +28,8 @@ public class Question implements Serializable {
     public ArrayList<String> getAlternatives() {
         return alternatives;
     }
+
+    public String getRightAnswer() {
+        return rightAnswer;
+    }
 }

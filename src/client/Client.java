@@ -1,5 +1,6 @@
 package client;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -25,7 +26,6 @@ public class Client extends JFrame {
     Socket socket;
     ObjectInputStream in;
     PrintWriter pw;
-
     private final String[] colors = {"Candy", "Egg", "Famous", "Random"};
     private JComboBox colChooser;
     private JPanel p = new JPanel();
@@ -36,13 +36,13 @@ public class Client extends JFrame {
     JButton button = new JButton("Start Game");
     JButton[] buttons = new JButton[4];
     String[] strings = {"Allan", "Fazli Zekiqi", "Victor J", "Victor O"};
-
     JLabel label = new JLabel("HÄR KOMMMER VI HA FRÅGAN?", SwingConstants.CENTER);
     JLabel s1 = new JLabel("Player 1");
     JLabel s2 = new JLabel("Player 2");
-
     JPanel gridPanel = new JPanel(new GridLayout(2, 2));
     JPanel centerPanel = new JPanel(new BorderLayout());
+
+    String rightAnswer;
 
     public Client() throws IOException {
         socket = new Socket("localhost", 56565);
@@ -95,9 +95,10 @@ public class Client extends JFrame {
                     Question q = (Question) obj;
                     label.setText(q.getQuestion());
                     ArrayList<String> alt=q.getAlternatives();
-
+                    rightAnswer=q.getRightAnswer();
                     for (int i = 0; i < alt.size(); i++) {
                         buttons[i].setText(alt.get(i));
+
                     }
 
                     //TODO display buttons and make them visible/invisible
@@ -125,7 +126,11 @@ public class Client extends JFrame {
 
     ActionListener clientListener = e -> {
         JButton temp = (JButton) e.getSource();
-        pw.println(temp.getText());
+        if(temp.getText().equalsIgnoreCase(rightAnswer))
+            temp.setBackground(Color.GREEN);
+        else
+            temp.setBackground(Color.RED);
+
         System.out.println(temp.getText());
     };//clientListener
 
