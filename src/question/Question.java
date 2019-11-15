@@ -1,12 +1,13 @@
 package question;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Question {
+public class Question implements Serializable {
 
+    static final long serialVersionUID = 42L;
     String question;
     String rightAnswer;
-
     public ArrayList<String> alternatives = new ArrayList<String>();
 
     public Question() {
@@ -22,5 +23,9 @@ public class Question {
 
     public String getQuestion() {
         return question;
+    }
+
+    public ArrayList<String> getAlternatives() {
+        return alternatives;
     }
 }

@@ -1,6 +1,11 @@
 package client;
 
+import java.awt.Dimension;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
 import question.Question;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
@@ -16,64 +21,63 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 public class Client extends JFrame {
+
     Socket socket;
     ObjectInputStream in;
     PrintWriter pw;
 
     private final String[] colors = {"Candy", "Egg", "Famous", "Random"};
-    private JComboBox colChooser ;
+    private JComboBox colChooser;
     private JPanel p = new JPanel();
-    private final String[] nr = {"2", "3","4","5","6","7","8","9","10"};
-    private JComboBox numbers ;
-    private final String[] rung = {"1", "2","3","4"};
-    private JComboBox runder ;
-    JButton button=new JButton("Start Game");
-    JButton[] buttons=new JButton[4];
-    String[] strings={"Allan","Fazli Zekiqi","Victor J","Victor O"};
+    private final String[] nr = {"2", "3", "4", "5", "6", "7", "8", "9", "10"};
+    private JComboBox numbers;
+    private final String[] rung = {"1", "2", "3", "4"};
+    private JComboBox runder;
+    JButton button = new JButton("Start Game");
+    JButton[] buttons = new JButton[4];
+    String[] strings = {"Allan", "Fazli Zekiqi", "Victor J", "Victor O"};
 
-    JLabel label=new JLabel("HÄR KOMMMER VI HA FRÅGAN?", SwingConstants.CENTER);
-    JLabel s1=new JLabel("Player 1");
-    JLabel s2=new JLabel("Player 2");
+    JLabel label = new JLabel("HÄR KOMMMER VI HA FRÅGAN?", SwingConstants.CENTER);
+    JLabel s1 = new JLabel("Player 1");
+    JLabel s2 = new JLabel("Player 2");
 
-    JPanel gridPanel=new JPanel(new GridLayout(2,2));
-    JPanel centerPanel=new JPanel(new BorderLayout());
+    JPanel gridPanel = new JPanel(new GridLayout(2, 2));
+    JPanel centerPanel = new JPanel(new BorderLayout());
 
     public Client() throws IOException {
-        socket=new Socket("localhost",56565);
-        in=new ObjectInputStream(socket.getInputStream());
-        pw=new PrintWriter(socket.getOutputStream(),true);
+        socket = new Socket("localhost", 56565);
+        in = new ObjectInputStream(socket.getInputStream());
+        pw = new PrintWriter(socket.getOutputStream(), true);
+
+        gridPanel.setPreferredSize(new Dimension(500,200));
+        gridPanel.setBorder(new EmptyBorder(0,30,0,0));
         setLayout(new BorderLayout());
-        numbers=new JComboBox(nr);
-        numbers.setSelectedItem(-1);
-        colChooser=new JComboBox(colors);
+        colChooser = new JComboBox(colors);
         colChooser.setSelectedIndex(-1);
-        runder=new JComboBox(rung);
-        runder.setSelectedIndex(-1);
 
+//        numbers=new JComboBox(nr);
+//        numbers.setSelectedItem(-1);
+//        runder=new JComboBox(rung);
+//        runder.setSelectedIndex(-1);
+//        p.add(numbers);
+//        p.add(runder);
 
-        p.add(numbers);
-        p.add(runder);
         p.add(colChooser);
         p.add(button);
         centerPanel.add(label, BorderLayout.CENTER);
         for (int i = 0; i < buttons.length; i++) {
-            buttons[i]=new JButton(strings[i]);
+            buttons[i] = new JButton(strings[i]);
             buttons[i].addActionListener(clientListener);
             gridPanel.add(buttons[i]);
 
         }
 
-        add(s1,BorderLayout.WEST);
-        add(s2,BorderLayout.EAST);
-        button.addActionListener(e->{
-            numbers.setEnabled(false);
-            colChooser.setEnabled(false);
-            runder.setEnabled(false);
-        });
-        centerPanel.add(gridPanel,BorderLayout.SOUTH);
-        add(centerPanel,BorderLayout.CENTER);
-        add(p,BorderLayout.NORTH);
+        add(s1, BorderLayout.WEST);
+        add(s2, BorderLayout.EAST);
 
+        centerPanel.add(gridPanel, BorderLayout.SOUTH);
+        add(centerPanel, BorderLayout.CENTER);
+        add(p, BorderLayout.NORTH);
 
         setSize(500, 500);
         setVisible(true);
@@ -89,11 +93,22 @@ public class Client extends JFrame {
             while ((obj = in.readObject()) != null) {
                 if (obj instanceof Question) {
                     Question q = (Question) obj;
-                    //label.setText(q.getQuestion);
+                    label.setText(q.getQuestion());
+                    ArrayList<String> alt=q.getAlternatives();
+
+                    for (int i = 0; i < alt.size(); i++) {
+                        buttons[i].setText(alt.get(i));
+                    }
+
                     //TODO display buttons and make them visible/invisible
                 } else if (obj instanceof String) {
                     String messageFromTheServer = (String) obj;
-                    System.out.println(messageFromTheServer);
+                    label.setText(messageFromTheServer);
+                    button.addActionListener(e -> {
+                        colChooser.setEnabled(false);
+                        pw.println(colChooser.getSelectedItem());
+                    });
+
                 } else if (obj instanceof Integer[]) {
                     Integer[] points = (Integer[]) obj;
                     System.out.println("Spelare 1 points :" + points[0]);
