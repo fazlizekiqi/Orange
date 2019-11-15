@@ -52,7 +52,7 @@ public class ServerSideGame extends Thread {
             currentState == ASKING_SECOND_PLAYER) {
                 Question q = questions.get(questionNumber);
                 String answer = askQuestion(q, currentPlayer);
-                if (answer.equals("Det rätta svaret")) {
+                if (q.isRightAnswer(answer)) {
                     currentPlayer.points++;
                 }
                 nextQuestion();
