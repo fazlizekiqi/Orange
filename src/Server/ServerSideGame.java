@@ -48,15 +48,13 @@ public class ServerSideGame extends Thread {
                 String categoryName = getCategoryName(currentPlayer);
                 questions = questionDB.getQuestions(categoryName, questionsPerRound);
                 currentState = ASKING_FIRST_PLAYER;
-            } else if (currentState == ASKING_FIRST_PLAYER ||
-            currentState == ASKING_SECOND_PLAYER) {
-                Question q = questions.get(questionNumber);
-                String answer = askQuestion(q, currentPlayer);
-                if (q.isRightAnswer(answer)) {
-                    currentPlayer.points++;
-                }
-                nextQuestion();
-            } else if (currentState == ALL_QUESTIONS_ANSWERED) {
+            } else if (currentState == ASKING_FIRST_PLAYER) {
+                checkAnswer();
+                currentState = ASKING_SECOND_PLAYER;
+            } else if (currentState == ASKING_SECOND_PLAYER) {
+                checkAnswer();
+                currentState = ALL_QUESTIONS_ANSWERED;
+            } else {
                 // Avsluta ronden, börja på nästa
                 sendResults(currentPlayer);
                 sendResults(currentPlayer.oponentPlayer);
@@ -65,8 +63,18 @@ public class ServerSideGame extends Thread {
         }
     }
 
+    private void checkAnswer() throws IOException {
+        Question q = questions.get(questionNumber);
+        String answer = askQuestion(q, currentPlayer);
+        if (q.isRightAnswer(answer)) {
+            currentPlayer.points++;
+        }
+        nextQuestion();
+
+    }
+
     String askQuestion(Question question, ServerSidePlayer player) throws IOException {
-        currentPlayer.output.writeObject(question);
+        player.output.writeObject(question);
         return player.input.readLine();
     }
 
@@ -76,18 +84,15 @@ public class ServerSideGame extends Thread {
     }
 
     void nextQuestion() {
-        if (questionNumber < questions.size()-1) {
-            questionNumber++;
-        } else {
-            questionNumber = 0; // Inför nästa rond
-            if (currentState == ASKING_FIRST_PLAYER) {
+        if (questionNumber < questions.size() - 1) {
+            if (currentState == ASKING_FIRST_PLAYER &&questionNumber==questionsPerRound-1) {
+                System.out.println("fazli");
                 // Flytta state-logiken till playRound?
                 currentPlayer = currentPlayer.oponentPlayer;
-                currentState = ASKING_SECOND_PLAYER;
-            } else {
-                currentState = ALL_QUESTIONS_ANSWERED;
+                currentState = SELECTING_CATEGORY;
             }
         }
+        questionNumber++;
     }
 
     // OBS Resultatens inbördes ordning
