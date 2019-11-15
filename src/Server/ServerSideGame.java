@@ -66,7 +66,7 @@ public class ServerSideGame extends Thread {
     }
 
     String askQuestion(Question question, ServerSidePlayer player) throws IOException {
-        currentPlayer.output.writeObject(question);
+        player.output.writeObject(question);
         return player.input.readLine();
     }
 

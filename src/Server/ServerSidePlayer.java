@@ -3,7 +3,7 @@ package Server;
 import java.io.*;
 import java.net.Socket;
 
-public class ServerSidePlayer extends Thread {
+public class ServerSidePlayer {
 
     Socket socket;
     ServerSidePlayer oponentPlayer;
@@ -31,10 +31,10 @@ public class ServerSidePlayer extends Thread {
         this.oponentPlayer = oponentPlayer;
     }
 
-    @Override
+    /*@Override
     public void run() {
 
 
 
-    }
+    }*/
 }
