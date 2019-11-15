@@ -50,8 +50,9 @@ public class ServerSideGame extends Thread {
                 currentState = ASKING_FIRST_PLAYER;
             } else if (currentState == ASKING_FIRST_PLAYER ||
             currentState == ASKING_SECOND_PLAYER) {
-                String answer = askQuestion(questions.get(questionNumber), currentPlayer);
-                if (answer.equals("Det rätta svaret")) {
+                Question q = questions.get(questionNumber);
+                String answer = askQuestion(q, currentPlayer);
+                if (q.isRightAnswer(answer)) {
                     currentPlayer.points++;
                 }
                 nextQuestion();
@@ -75,7 +76,7 @@ public class ServerSideGame extends Thread {
     }
 
     void nextQuestion() {
-        if (questionNumber < questions.size()) {
+        if (questionNumber < questions.size()-1) {
             questionNumber++;
         } else {
             questionNumber = 0; // Inför nästa rond
