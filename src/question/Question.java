@@ -25,6 +25,10 @@ public class Question implements Serializable {
         return question;
     }
 
+    public boolean isRightAnswer(String s) {
+        return s.equals(rightAnswer);
+    }
+
     public ArrayList<String> getAlternatives() {
         return alternatives;
     }
