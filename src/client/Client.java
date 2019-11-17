@@ -4,9 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.List;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.TitledBorder;
 import question.Question;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
@@ -27,13 +25,13 @@ public class Client extends JFrame {
     ObjectInputStream in;
     PrintWriter pw;
     private final String[] colors = {"Candy", "Egg", "Famous", "Random"};
-    private JComboBox colChooser;
+    private JComboBox categoryChooser;
     private JPanel p = new JPanel();
     private final String[] nr = {"2", "3", "4", "5", "6", "7", "8", "9", "10"};
     private JComboBox numbers;
     private final String[] rung = {"1", "2", "3", "4"};
     private JComboBox runder;
-    JButton button = new JButton("Start Game");
+    JButton categorybutton = new JButton("Start Game");
     JButton continueButton = new JButton("Continue");
     JButton[] buttons = new JButton[4];
     String[] strings = {"Allan", "Fazli Zekiqi", "Victor J", "Victor O"};
@@ -53,8 +51,8 @@ public class Client extends JFrame {
         gridPanel.setPreferredSize(new Dimension(500, 200));
         gridPanel.setBorder(new EmptyBorder(0, 30, 0, 0));
         setLayout(new BorderLayout());
-        colChooser = new JComboBox(colors);
-        colChooser.setSelectedIndex(-1);
+        categoryChooser = new JComboBox(colors);
+        categoryChooser.setSelectedIndex(0);
 
 //        numbers=new JComboBox(nr);
 //        numbers.setSelectedItem(-1);
@@ -63,8 +61,8 @@ public class Client extends JFrame {
 //        p.add(numbers);
 //        p.add(runder);
 
-        p.add(colChooser);
-        p.add(button);
+        p.add(categoryChooser);
+        p.add(categorybutton);
         centerPanel.add(label, BorderLayout.CENTER);
         for (int i = 0; i < buttons.length; i++) {
             buttons[i] = new JButton(strings[i]);
@@ -91,34 +89,40 @@ public class Client extends JFrame {
 
     public void gameLoop() {
         Object obj;
+        continueButton.addActionListener(cnt);
 
         try {
-            while ((obj = in.readObject()) != null) {
-                if (obj instanceof Question) {
-                    Question q = (Question) obj;
-                    label.setText(q.getQuestion());
-                    ArrayList<String> alt = q.getAlternatives();
-                    rightAnswer = q.getRightAnswer();
-                    for (int i = 0; i < alt.size(); i++) {
-                        continueButton.addActionListener(cnt);
-                        buttons[i].setText(alt.get(i));
-                        buttons[i].addActionListener(clientListener);
-                    }
+                while ((obj = in.readObject()) != null) {
+                    if (obj instanceof Question) {
+                        Question q = (Question) obj;
+                        label.setText(q.getQuestion());
+                        ArrayList<String> alt = q.getAlternatives();
+                        rightAnswer = q.getRightAnswer();
+                        for (int i = 0; i < alt.size(); i++) {
 
-                    //TODO display buttons and make them visible/invisible
-                } else if (obj instanceof String) {
-                    String messageFromTheServer = (String) obj;
-                    label.setText(messageFromTheServer);
-                    button.addActionListener(e -> {
-                        colChooser.setEnabled(false);
-                        pw.println(colChooser.getSelectedItem());
-                    });
-                } else if (obj instanceof Integer[]) {
-                    Integer[] points = (Integer[]) obj;
-                    System.out.println("Spelare 1 points :" + points[0]);
-                    System.out.println("Spelare 2 points :" + points[1]);
+                            buttons[i].setText(alt.get(i));
+                        }
+
+                        //TODO display buttons and make them visible/invisible
+                    } else if (obj instanceof String) {
+                        String messageFromTheServer = (String) obj;
+                        if (messageFromTheServer.startsWith("wait")){
+                            for (int i = 0; i < buttons.length; i++) {
+                                buttons[i].setEnabled(false);
+                            }
+                        }
+                        label.setText(messageFromTheServer);
+                        categorybutton.addActionListener(e -> {
+                            categoryChooser.setEnabled(false);
+                            pw.println(categoryChooser.getSelectedItem());
+                            categorybutton.setEnabled(false);
+                        });
+                    } else if (obj instanceof Integer[]) {
+                        Integer[] points = (Integer[]) obj;
+                        System.out.println("Spelare 1 points :" + points[0]);
+                        System.out.println("Spelare 2 points :" + points[1]);
+                    }
                 }
-            }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -133,8 +137,8 @@ public class Client extends JFrame {
         continueButton.setVisible(false);
         for (int i = 0; i < buttons.length; i++) {
             buttons[i].setBackground(null);
-            pw.println(theAnswer);
         }
+        pw.println(theAnswer);
     };
 
     ActionListener clientListener = e -> {
@@ -143,6 +147,7 @@ public class Client extends JFrame {
         changeColor(temp);
         continueButton.setVisible(true);
         theAnswer = temp.getText();
+        System.out.println(theAnswer);
     };//clientListener
 
     private void changeColor(JButton temp) {
@@ -162,9 +167,11 @@ public class Client extends JFrame {
     }
 
     public static void main(String[] args) {
+
         try {
-            Client client = new Client();
-        } catch (IOException e) {
+            new Client();
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
     }
