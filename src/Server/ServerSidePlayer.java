@@ -76,7 +76,10 @@ public class ServerSidePlayer extends Thread {
                         currentState = ASKING_QUESTIONS;
                     }
                     else {
-                        nmn=oponentPlayer;
+                        if(nmn==this)
+                            nmn=oponentPlayer;
+                        else
+                            nmn=this;
                         System.out.println("VÄLJ KATEGORI");
                         currentState = SELECTING_CATEGORY;
                     }

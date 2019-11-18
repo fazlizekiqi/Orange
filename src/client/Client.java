@@ -102,7 +102,7 @@ public class Client extends JFrame {
                         ArrayList<String> alt = q.getAlternatives();
                         rightAnswer = q.getRightAnswer();
                         for (int i = 0; i < alt.size(); i++) {
-
+                            buttons[i].setEnabled(true);
                             buttons[i].setText(alt.get(i));
                         }
 
@@ -156,6 +156,9 @@ public class Client extends JFrame {
     ActionListener clientListener = e -> {
 
         JButton temp = (JButton) e.getSource();
+        for (int i = 0; i < buttons.length; i++) {
+            buttons[i].setEnabled(false);
+        }
         changeColor(temp);
         continueButton.setVisible(true);
         theAnswer = temp.getText();
