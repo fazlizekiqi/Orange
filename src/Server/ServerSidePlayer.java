@@ -47,13 +47,17 @@ public class ServerSidePlayer extends Thread {
 
     @Override
     public void run() {
-        ServerSidePlayer player=this;
+      ServerSidePlayer nmn = this;
         try {
             while (true) {
-                if (currentState == SELECTING_CATEGORY && game.currentPlayer.equals(player)) {
+                if (currentState == SELECTING_CATEGORY && game.currentPlayer.equals(nmn)) {
+                    System.out.println("FAzli");
                     game.currentPlayer.outputObject.writeObject("choose category");
                     System.out.println("VÄLJER KATEGORI");
-                    game.selectCatagory(input.readLine());
+                    String allan = game.currentPlayer.input.readLine();
+                    game.selectCatagory(allan);
+                    System.out.println(allan);
+
                     questions = game.getQuestions();
                     currentState = ASKING_QUESTIONS;
                 } else if (currentState == ASKING_QUESTIONS) {
@@ -72,7 +76,7 @@ public class ServerSidePlayer extends Thread {
                         currentState = ASKING_QUESTIONS;
                     }
                     else {
-                        player=game.currentPlayer.oponentPlayer;
+                        nmn=oponentPlayer;
                         System.out.println("VÄLJ KATEGORI");
                         currentState = SELECTING_CATEGORY;
                     }

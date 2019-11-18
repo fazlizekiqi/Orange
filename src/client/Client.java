@@ -41,6 +41,8 @@ public class Client extends JFrame {
     JPanel gridPanel = new JPanel(new GridLayout(2, 2));
     JPanel centerPanel = new JPanel(new BorderLayout());
 
+    int counter;
+
     String rightAnswer;
 
     public Client() throws IOException {
@@ -112,6 +114,9 @@ public class Client extends JFrame {
                                 buttons[i].setEnabled(false);
                             }
                         }
+                        else if (!messageFromTheServer.startsWith("wait")) {
+
+                        }
                         else{
                             for (int i = 0; i < buttons.length; i++) {
                                 buttons[i].setEnabled(true);
@@ -119,10 +124,10 @@ public class Client extends JFrame {
                         }
                         label.setText(messageFromTheServer);
                         categorybutton.addActionListener(e -> {
-                            categoryChooser.setEnabled(false);
+                            //categoryChooser.setEnabled(false);
                             pw.println(categoryChooser.getSelectedItem());
-                            System.out.println(categoryChooser.getSelectedItem());
-                            categorybutton.setEnabled(false);
+                            System.out.println("VALD KATEGORI" + categoryChooser.getSelectedItem());
+                            //categorybutton.setEnabled(false);
                         });
                     } else if (obj instanceof Integer[]) {
                         Integer[] points = (Integer[]) obj;
