@@ -47,10 +47,12 @@ public class ServerSidePlayer extends Thread {
 
     @Override
     public void run() {
+        ServerSidePlayer player=this;
         try {
             while (true) {
-                if (currentState == SELECTING_CATEGORY) {
+                if (currentState == SELECTING_CATEGORY && game.currentPlayer.equals(player)) {
                     game.currentPlayer.outputObject.writeObject("choose category");
+                    System.out.println("VÄLJER KATEGORI");
                     game.selectCatagory(input.readLine());
                     questions = game.getQuestions();
                     currentState = ASKING_QUESTIONS;
@@ -62,9 +64,19 @@ public class ServerSidePlayer extends Thread {
                         handleQuestions();
                     }
                 } else if (currentState == SWITCH_PLAYER) {
-                    game.currentPlayer.outputObject.writeObject("wait for the opponent");
-                    game.switchPlayer();
-                    currentState = ASKING_QUESTIONS;
+                    if (!game.isRoundOver()) {
+                        game.switchPlayer();
+
+                        System.out.println("BYTER SPELARE");
+                        game.currentPlayer.oponentPlayer.outputObject.writeObject("wait for the opponent");
+                        currentState = ASKING_QUESTIONS;
+                    }
+                    else {
+                        player=game.currentPlayer.oponentPlayer;
+                        System.out.println("VÄLJ KATEGORI");
+                        currentState = SELECTING_CATEGORY;
+                    }
+
                 }
             }
 

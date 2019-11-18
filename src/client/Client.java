@@ -121,6 +121,7 @@ public class Client extends JFrame {
                         categorybutton.addActionListener(e -> {
                             categoryChooser.setEnabled(false);
                             pw.println(categoryChooser.getSelectedItem());
+                            System.out.println(categoryChooser.getSelectedItem());
                             categorybutton.setEnabled(false);
                         });
                     } else if (obj instanceof Integer[]) {

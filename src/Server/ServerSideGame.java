@@ -31,7 +31,7 @@ public class ServerSideGame {
      * om en av de har mer än den andra så finns det en vinnare
      * @return sant eller falskt
      */
-    public boolean hasWinner() {
+    public synchronized boolean hasWinner() {
         if (isGameOver()){
             if (currentPlayer.points > currentPlayer.oponentPlayer.points || currentPlayer.points < currentPlayer.oponentPlayer.points) {
                 return true;
@@ -45,7 +45,7 @@ public class ServerSideGame {
      * om de har samma resultat då är det oavgjort
      * @return
      */
-    public boolean isTie() {
+    public synchronized boolean isTie() {
         if (isGameOver()) {
             if (currentPlayer.points == currentPlayer.oponentPlayer.points) {
                 return true;
@@ -58,7 +58,7 @@ public class ServerSideGame {
      * Metoden kollar om rundan är över genom att kolla på båda spelarnas questionNumber
      * @return
      */
-    public boolean isRoundOver(){
+    public synchronized boolean  isRoundOver(){
         if (currentPlayer.questionNumber == questionsPerRound  && currentPlayer.oponentPlayer.questionNumber == questionsPerRound) {
             currentPlayer.questionNumber = 0; // nollställer om rundan är över (Problemet är att det finns risk för
             //  att man kan få samma fråga igen om man väljer samma kategori)
@@ -75,7 +75,7 @@ public class ServerSideGame {
      * Metoden kollar om spelet är över
      * @return
      */
-    public boolean isGameOver() {
+    public synchronized boolean isGameOver() {
         if (currentRound == totalRounds) {
             //currentRound = 0; // nollställa currentRound???
             return true;
@@ -86,7 +86,7 @@ public class ServerSideGame {
     /**
      * Metoden byter spelare endast om alla frågor är besvarade av nuvarnde spelaren
      */
-    public void switchPlayer() {
+    public synchronized void switchPlayer() {
         if (allQuestionsAnswered()) {
             currentPlayer = currentPlayer.oponentPlayer;
         }
@@ -97,7 +97,7 @@ public class ServerSideGame {
      * om alla frågor är besvara returnerar den sant
      * @return
      */
-    public boolean allQuestionsAnswered() {
+    public synchronized boolean allQuestionsAnswered() {
         return currentPlayer.questionNumber == questionsPerRound;
     }
 
@@ -105,7 +105,7 @@ public class ServerSideGame {
      * Metoden skickar endast nästa fråga om alla frågor inte är besvarade för nuvarande spelaren
      * @return
      */
-    public void nextQuestion() {
+    public synchronized void nextQuestion() {
         currentPlayer.questionNumber++;
     }
 
@@ -114,7 +114,7 @@ public class ServerSideGame {
      * @param categoryName
      * @return : frågan
      */
-    public void selectCatagory(String categoryName) {
+    public synchronized void selectCatagory(String categoryName) {
         questions =  db.getQuestions(categoryName, questionsPerRound);
         currentRound++;
     }
