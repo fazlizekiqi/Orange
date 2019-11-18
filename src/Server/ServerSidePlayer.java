@@ -12,6 +12,15 @@ public class ServerSidePlayer extends Thread {
     ServerSidePlayer oponentPlayer;
     int points = 0;
     int questionNumber = 0;
+    Question q;
+    List<Question> questions;
+    String answer;
+
+    private static final int SELECTING_CATEGORY = 0;
+    private static final int ASKING_QUESTIONS = 1;
+    private static final int SWITCH_PLAYER = 2;
+    private static final int ALL_QUESTIONS_ANSWERED = 3;
+    int currentState = SELECTING_CATEGORY;
 
     String name;
     ServerSideGame game;
@@ -36,40 +45,46 @@ public class ServerSidePlayer extends Thread {
     }
 
 
-
     @Override
     public void run() {
         try {
-            if (game.currentPlayer.equals(this)) {
-                game.currentPlayer.outputObject.writeObject("choose category");
-                game.selectCatagory(input.readLine());
-                List<Question> questions = game.getQuestions();
-                Question q;
-                sendQuestions(questions);
-                game.currentPlayer.outputObject.writeObject("wait for the opponent");
-                game.switchPlayer();
-                sendQuestions(questions);
+            while (true) {
+                if (currentState == SELECTING_CATEGORY) {
+                    game.currentPlayer.outputObject.writeObject("choose category");
+                    game.selectCatagory(input.readLine());
+                    questions = game.getQuestions();
+                    currentState = ASKING_QUESTIONS;
+                } else if (currentState == ASKING_QUESTIONS) {
+                    if (game.allQuestionsAnswered()) {
+                        currentState = SWITCH_PLAYER;
+                    }
+                    else {
+                        handleQuestions();
+                    }
+                } else if (currentState == SWITCH_PLAYER) {
+                    game.currentPlayer.outputObject.writeObject("wait for the opponent");
+                    game.switchPlayer();
+                    currentState = ASKING_QUESTIONS;
+                }
             }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void sendQuestions(List<Question> questions) throws IOException {
-        Question q;
-        while (game.currentPlayer.questionNumber < game.getQuestionsPerRound()) {
-            System.out.println(game.currentPlayer.questionNumber);
+    private void handleQuestions() throws IOException {
+        while (!game.allQuestionsAnswered()) {
             q = questions.get(game.currentPlayer.questionNumber);
-            System.out.println(q.getQuestion());
             game.currentPlayer.outputObject.writeObject(q);
-            String answer = game.currentPlayer.input.readLine();
-            System.out.println(answer);
+            System.out.println(q.getQuestion()); // spårutskrift
+            answer = game.currentPlayer.input.readLine();
             if (q.isRightAnswer(answer)) {
                 game.currentPlayer.points++;
             }
-            System.out.println("poäng" + game.currentPlayer.points);
+            System.out.println("poäng" + game.currentPlayer.points); // spårutskrift
             game.nextQuestion();// index ökar med 1
-            System.out.println("questionNumber ökar till" + game.currentPlayer.questionNumber);
+            System.out.println("questionNumber ökar till" + game.currentPlayer.questionNumber); // spårutskrift
         }
     }
 }

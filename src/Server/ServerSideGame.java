@@ -15,6 +15,8 @@ public class ServerSideGame {
     private int totalRounds;
     private int currentRound = 0;
 
+
+
     public int getQuestionsPerRound() {
         return questionsPerRound;
     }
@@ -119,5 +121,9 @@ public class ServerSideGame {
 
     public List<Question> getQuestions() {
         return questions;
+    }
+
+    public void gameLogic() {
+
     }
 }

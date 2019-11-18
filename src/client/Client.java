@@ -95,6 +95,7 @@ public class Client extends JFrame {
                 while ((obj = in.readObject()) != null) {
                     if (obj instanceof Question) {
                         Question q = (Question) obj;
+                        System.out.println(q.getQuestion());
                         label.setText(q.getQuestion());
                         ArrayList<String> alt = q.getAlternatives();
                         rightAnswer = q.getRightAnswer();
@@ -109,6 +110,11 @@ public class Client extends JFrame {
                         if (messageFromTheServer.startsWith("wait")){
                             for (int i = 0; i < buttons.length; i++) {
                                 buttons[i].setEnabled(false);
+                            }
+                        }
+                        else{
+                            for (int i = 0; i < buttons.length; i++) {
+                                buttons[i].setEnabled(true);
                             }
                         }
                         label.setText(messageFromTheServer);
