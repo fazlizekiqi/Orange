@@ -61,12 +61,9 @@ public class ServerSidePlayer extends Thread {
                     questions = game.getQuestions();
                     currentState = ASKING_QUESTIONS;
                 } else if (currentState == ASKING_QUESTIONS) {
-                    if (game.allQuestionsAnswered()) {
-                        currentState = SWITCH_PLAYER;
-                    }
-                    else {
+
                         handleQuestions();
-                    }
+                    currentState=SWITCH_PLAYER;
                 } else if (currentState == SWITCH_PLAYER) {
                     if (!game.isRoundOver()) {
                         game.switchPlayer();
