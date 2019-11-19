@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import javax.swing.JOptionPane;
 import javax.swing.border.EmptyBorder;
 import question.Question;
 import java.awt.BorderLayout;
@@ -97,62 +96,69 @@ public class Client extends JFrame implements Runnable {
         try {
             while ((obj = in.readObject()) != null) {
                 if (obj instanceof Question) {
-                    Question q = (Question) obj;
-                    System.out.println(q.getQuestion());
-                    label.setText(q.getQuestion());
-                    ArrayList<String> alt = q.getAlternatives();
-                    rightAnswer = q.getRightAnswer();
-                    for (int i = 0; i < alt.size(); i++) {
-                        buttons[i].setEnabled(true);
-                        buttons[i].setText(alt.get(i));
-                    }
-
+                    Question question = (Question) obj;
+                    showTheQuestion(question);
                 } else if (obj instanceof String) {
                     String message = (String) obj;
-                    if (message.startsWith("Welcome")) {
-                        message = message.substring(message.indexOf(' '));
-                        if (message.contains("1")) {
-                            s1.setText(message);
-                            setTitle(message);
-                            s2.setText("Player 2");
-                        } else {
-                            s2.setText(message);
-                            setTitle(message);
-                            s1.setText("Player 1");
-                        }
-
-                    } else if (message.startsWith("Wait")) {
-
-                        for (int i = 0; i < buttons.length; i++) {
-                            buttons[i].setEnabled(false);
-                        }
-                        categoryChooser.setEnabled(false);
-                        categorybutton.setEnabled(false);
-                        label.setText(message);
-
-                    } else {
-                        categorybutton.setEnabled(true);
-                        categoryChooser.setEnabled(true);
-                        label.setText(message);
-                    }
+                    showTheMessageFromServer(message);
 
                 } else if (obj instanceof Integer[]) {
                     Integer[] points = (Integer[]) obj;
-                    s1.setText("P1 : " + points[0]);
-                    s2.setText("P2 : " + points[1]);
+                    showThePoints(points);
                 }
-            }
+            }//while
 
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-// throws IOException, ClassNotFoundException
-    }//gameLoop()
+    }//run()
+
+    private void showTheQuestion(Question question) {
+        System.out.println(question.getQuestion());
+        label.setText(question.getQuestion());
+        ArrayList<String> alt = question.getAlternatives();
+        rightAnswer = question.getRightAnswer();
+        for (int i = 0; i < alt.size(); i++) {
+            buttons[i].setEnabled(true);
+            buttons[i].setText(alt.get(i));
+        }
+    }
+
+    private void showThePoints(Integer[] points) {
+        s1.setText("P1 : " + points[0]);
+        s2.setText("P2 : " + points[1]);
+    }
+
+    private void showTheMessageFromServer(String message) {
+        if (message.startsWith("Welcome")) {
+            message = message.substring(message.indexOf(' '));
+            if (message.contains("1")) {
+                s1.setText(message);
+                setTitle(message);
+                s2.setText("Player 2");
+            } else {
+                s2.setText(message);
+                setTitle(message);
+                s1.setText("Player 1");
+            }
+
+        } else if (message.startsWith("Wait")) {
+            for (int i = 0; i < buttons.length; i++) {
+                buttons[i].setEnabled(false);
+            }
+            categoryChooser.setEnabled(false);
+            categorybutton.setEnabled(false);
+            label.setText(message);
+        } else {
+            categorybutton.setEnabled(true);
+            categoryChooser.setEnabled(true);
+            label.setText(message);
+        }
+    }//showTheMessageFromTheServer
 
     String theAnswer;
-
     ActionListener cnt = e -> {
         continueButton.setVisible(false);
         for (int i = 0; i < buttons.length; i++) {
