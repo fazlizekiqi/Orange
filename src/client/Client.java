@@ -33,8 +33,8 @@ public class Client extends JFrame implements Runnable {
     JButton[] buttons = new JButton[4];
     String[] strings = {"Allan", "Fazli Zekiqi", "Victor J", "Victor O"};
     JLabel label = new JLabel("Welcome to the Quiz Fight", SwingConstants.CENTER);
-    JLabel s1 = new JLabel("s1");
-    JLabel s2 = new JLabel("s2");
+    JLabel spelare1 = new JLabel("s1");
+    JLabel spelare2 = new JLabel("s2");
     JPanel gridPanel = new JPanel(new GridLayout(2, 2));
     JPanel centerPanel = new JPanel(new BorderLayout());
     Thread thread = new Thread(this);
@@ -58,14 +58,13 @@ public class Client extends JFrame implements Runnable {
         centerPanel.add(label, BorderLayout.CENTER);
         for (int i = 0; i < buttons.length; i++) {
             buttons[i] = new JButton(strings[i]);
-            buttons[i].addActionListener(clientListener);
+            buttons[i].addActionListener(alternativesListener);
             buttons[i].setEnabled(false);
             gridPanel.add(buttons[i]);
 
 
         }
         categorybutton.addActionListener(e -> {
-            //categoryChooser.setEnabled(false);
             pw.println(categoryChooser.getSelectedItem());
             System.out.println("VALD KATEGORI" + categoryChooser.getSelectedItem());
 
@@ -73,8 +72,8 @@ public class Client extends JFrame implements Runnable {
 
         add(continueButton, BorderLayout.SOUTH);
         continueButton.setVisible(false);
-        add(s1, BorderLayout.WEST);
-        add(s2, BorderLayout.EAST);
+        add(spelare1, BorderLayout.WEST);
+        add(spelare2, BorderLayout.EAST);
 
         centerPanel.add(gridPanel, BorderLayout.SOUTH);
         add(centerPanel, BorderLayout.CENTER);
@@ -91,7 +90,7 @@ public class Client extends JFrame implements Runnable {
     public void run() {
 
         Object obj;
-        continueButton.addActionListener(cnt);
+        continueButton.addActionListener(continueButtonListener);
 
         try {
             while ((obj = in.readObject()) != null) {
@@ -127,21 +126,26 @@ public class Client extends JFrame implements Runnable {
     }
 
     private void showThePoints(Integer[] points) {
-        s1.setText("P1 : " + points[0]);
-        s2.setText("P2 : " + points[1]);
+        if(spelare1.equals("Player 1")){
+            spelare1.setText("P1 : " + points[1]);
+            spelare2.setText("P2 : " + points[0]);
+        }else{
+            spelare2.setText("P2 : " + points[0]);
+            spelare1.setText("P1 : " + points[1]);
+        }
     }
 
     private void showTheMessageFromServer(String message) {
         if (message.startsWith("Welcome")) {
             message = message.substring(message.indexOf(' '));
             if (message.contains("1")) {
-                s1.setText(message);
+                spelare1.setText(message);
                 setTitle(message);
-                s2.setText("Player 2");
+                spelare2.setText("Player 2");
             } else {
-                s2.setText(message);
+                spelare2.setText(message);
                 setTitle(message);
-                s1.setText("Player 1");
+                spelare1.setText("Player 1");
             }
 
         } else if (message.startsWith("Wait")) {
@@ -158,30 +162,29 @@ public class Client extends JFrame implements Runnable {
         }
     }//showTheMessageFromTheServer
 
-    String theAnswer;
-    ActionListener cnt = e -> {
+    String theAnswerFromUser;
+    ActionListener continueButtonListener = e -> {
         continueButton.setVisible(false);
         for (int i = 0; i < buttons.length; i++) {
             buttons[i].setBackground(null);
         }
 
-        pw.println(theAnswer);
+        pw.println(theAnswerFromUser);
     };//cnt
 
-    ActionListener clientListener = e -> {
+    ActionListener alternativesListener = e -> {
         JButton temp = (JButton) e.getSource();
         categoryChooser.setEnabled(false);
         categorybutton.setEnabled(false);
         for (int i = 0; i < buttons.length; i++) {
             buttons[i].setEnabled(false);
         }
-        changeColor(temp);
+        changeButtonsColor(temp);
         continueButton.setVisible(true);
-        theAnswer = temp.getText();
-        System.out.println(theAnswer);
+        theAnswerFromUser = temp.getText();
     };//clientListener
 
-    private void changeColor(JButton temp) {
+    private void changeButtonsColor(JButton temp) {
         if (temp.getText().equalsIgnoreCase(rightAnswer)) {
             temp.setBackground(Color.GREEN);
             temp.setOpaque(true);

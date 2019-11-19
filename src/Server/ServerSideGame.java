@@ -70,8 +70,9 @@ public class ServerSideGame extends Thread {
     }
 
     private void handleQuestions() throws IOException {
+        Question q;
         while (!allQuestionsAnswered()) {
-            Question q = questions.get(currentPlayer.questionNumber);
+            q = questions.get(currentPlayer.questionNumber);
             currentPlayer.outputObject.writeObject(q);
             String answer = currentPlayer.input.readLine();
             if (q.isRightAnswer(answer)) {
