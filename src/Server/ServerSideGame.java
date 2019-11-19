@@ -27,8 +27,7 @@ public class ServerSideGame extends Thread {
     public void run() {
         try {
 
-            currentPlayer.oponentPlayer.outputObject
-                .writeObject("Wait until other player chooses a category!");
+            currentPlayer.oponentPlayer.outputObject.writeObject("Wait until other player chooses a category!");
             while (true) {
 
                 if (currentState == SELECTING_CATEGORY) {
@@ -40,8 +39,13 @@ public class ServerSideGame extends Thread {
                     currentState = SWITCH_PLAYER;
                 } else if (currentState == SWITCH_PLAYER) {
                     switchingPlayer();
+                }else if(currentState==ALL_QUESTIONS_ANSWERED){
+                    Integer[] points={currentPlayer.points,currentPlayer.oponentPlayer.points};
+                    currentPlayer.outputObject.writeObject(points);
+                    currentPlayer.oponentPlayer.outputObject.writeObject(points);
+                    currentState = SELECTING_CATEGORY;
                 }
-            }
+            }//While
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -50,7 +54,7 @@ public class ServerSideGame extends Thread {
 
     private void switchingPlayer() throws IOException {
         if (isRoundOver()) {
-            currentState = SELECTING_CATEGORY;
+            currentState=ALL_QUESTIONS_ANSWERED;
         } else {
             switchPlayer();
             currentPlayer.oponentPlayer.outputObject
@@ -66,7 +70,6 @@ public class ServerSideGame extends Thread {
     }
 
     private void handleQuestions() throws IOException {
-
         while (!allQuestionsAnswered()) {
             Question q = questions.get(currentPlayer.questionNumber);
             currentPlayer.outputObject.writeObject(q);
@@ -74,7 +77,6 @@ public class ServerSideGame extends Thread {
             if (q.isRightAnswer(answer)) {
                 currentPlayer.points++;
             }
-
             currentPlayer.game.nextQuestion();// index ökar med 1
         }//while
     }//handleQuestions

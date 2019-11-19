@@ -113,9 +113,11 @@ public class Client extends JFrame implements Runnable {
                         message = message.substring(message.indexOf(' '));
                         if (message.contains("1")) {
                             s1.setText(message);
+                            setTitle(message);
                             s2.setText("Player 2");
                         } else {
                             s2.setText(message);
+                            setTitle(message);
                             s1.setText("Player 1");
                         }
 
