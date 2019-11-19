@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.border.EmptyBorder;
 import question.Question;
 import java.awt.BorderLayout;
@@ -19,7 +20,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-public class Client extends JFrame {
+public class Client extends JFrame implements Runnable {
 
     Socket socket;
     ObjectInputStream in;
@@ -27,20 +28,17 @@ public class Client extends JFrame {
     private final String[] colors = {"Candy", "Egg", "Famous", "Random"};
     private JComboBox categoryChooser;
     private JPanel p = new JPanel();
-    private final String[] nr = {"2", "3", "4", "5", "6", "7", "8", "9", "10"};
-    private JComboBox numbers;
-    private final String[] rung = {"1", "2", "3", "4"};
-    private JComboBox runder;
+
     JButton categorybutton = new JButton("Start Game");
     JButton continueButton = new JButton("Continue");
     JButton[] buttons = new JButton[4];
     String[] strings = {"Allan", "Fazli Zekiqi", "Victor J", "Victor O"};
-    JLabel label = new JLabel("HÄR KOMMMER VI HA FRÅGAN?", SwingConstants.CENTER);
-    JLabel s1 = new JLabel("Player 1");
-    JLabel s2 = new JLabel("Player 2");
+    JLabel label = new JLabel("Welcome to the Quiz Fight", SwingConstants.CENTER);
+    JLabel s1 = new JLabel("s1");
+    JLabel s2 = new JLabel("s2");
     JPanel gridPanel = new JPanel(new GridLayout(2, 2));
     JPanel centerPanel = new JPanel(new BorderLayout());
-
+    Thread thread = new Thread(this);
     int counter;
 
     String rightAnswer;
@@ -56,22 +54,23 @@ public class Client extends JFrame {
         categoryChooser = new JComboBox(colors);
         categoryChooser.setSelectedIndex(0);
 
-//        numbers=new JComboBox(nr);
-//        numbers.setSelectedItem(-1);
-//        runder=new JComboBox(rung);
-//        runder.setSelectedIndex(-1);
-//        p.add(numbers);
-//        p.add(runder);
-
         p.add(categoryChooser);
         p.add(categorybutton);
         centerPanel.add(label, BorderLayout.CENTER);
         for (int i = 0; i < buttons.length; i++) {
             buttons[i] = new JButton(strings[i]);
             buttons[i].addActionListener(clientListener);
+            buttons[i].setEnabled(false);
             gridPanel.add(buttons[i]);
 
+
         }
+        categorybutton.addActionListener(e -> {
+            //categoryChooser.setEnabled(false);
+            pw.println(categoryChooser.getSelectedItem());
+            System.out.println("VALD KATEGORI" + categoryChooser.getSelectedItem());
+
+        });
 
         add(continueButton, BorderLayout.SOUTH);
         continueButton.setVisible(false);
@@ -85,56 +84,63 @@ public class Client extends JFrame {
         setSize(500, 500);
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        gameLoop();
+        thread.start();
 
     }//CONSTRUCTOR
 
-    public void gameLoop() {
+    @Override
+    public void run() {
+
         Object obj;
         continueButton.addActionListener(cnt);
 
         try {
-                while ((obj = in.readObject()) != null) {
-                    if (obj instanceof Question) {
-                        Question q = (Question) obj;
-                        System.out.println(q.getQuestion());
-                        label.setText(q.getQuestion());
-                        ArrayList<String> alt = q.getAlternatives();
-                        rightAnswer = q.getRightAnswer();
-                        for (int i = 0; i < alt.size(); i++) {
-                            buttons[i].setEnabled(true);
-                            buttons[i].setText(alt.get(i));
-                        }
-
-                        //TODO display buttons and make them visible/invisible
-                    } else if (obj instanceof String) {
-                        String messageFromTheServer = (String) obj;
-                        if (messageFromTheServer.startsWith("wait")){
-                            for (int i = 0; i < buttons.length; i++) {
-                                buttons[i].setEnabled(false);
-                            }
-                        }
-                        else if (!messageFromTheServer.startsWith("wait")) {
-
-                        }
-                        else{
-                            for (int i = 0; i < buttons.length; i++) {
-                                buttons[i].setEnabled(true);
-                            }
-                        }
-                        label.setText(messageFromTheServer);
-                        categorybutton.addActionListener(e -> {
-                            //categoryChooser.setEnabled(false);
-                            pw.println(categoryChooser.getSelectedItem());
-                            System.out.println("VALD KATEGORI" + categoryChooser.getSelectedItem());
-                            //categorybutton.setEnabled(false);
-                        });
-                    } else if (obj instanceof Integer[]) {
-                        Integer[] points = (Integer[]) obj;
-                        System.out.println("Spelare 1 points :" + points[0]);
-                        System.out.println("Spelare 2 points :" + points[1]);
+            while ((obj = in.readObject()) != null) {
+                if (obj instanceof Question) {
+                    Question q = (Question) obj;
+                    System.out.println(q.getQuestion());
+                    label.setText(q.getQuestion());
+                    ArrayList<String> alt = q.getAlternatives();
+                    rightAnswer = q.getRightAnswer();
+                    for (int i = 0; i < alt.size(); i++) {
+                        buttons[i].setEnabled(true);
+                        buttons[i].setText(alt.get(i));
                     }
+
+                } else if (obj instanceof String) {
+                    String message = (String) obj;
+                    if (message.startsWith("Welcome")) {
+                        message = message.substring(message.indexOf(' '));
+                        if (message.contains("1")) {
+                            s1.setText(message);
+                            s2.setText("Player 2");
+                        } else {
+                            s2.setText(message);
+                            s1.setText("Player 1");
+                        }
+
+                    } else if (message.startsWith("Wait")) {
+
+                        for (int i = 0; i < buttons.length; i++) {
+                            buttons[i].setEnabled(false);
+                        }
+                        categoryChooser.setEnabled(false);
+                        categorybutton.setEnabled(false);
+                        label.setText(message);
+
+                    } else {
+                        categorybutton.setEnabled(true);
+                        categoryChooser.setEnabled(true);
+                        label.setText(message);
+                    }
+
+                } else if (obj instanceof Integer[]) {
+                    Integer[] points = (Integer[]) obj;
+                    s1.setText("P1 : " + points[0]);
+                    s2.setText("P2 : " + points[1]);
                 }
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -150,12 +156,14 @@ public class Client extends JFrame {
         for (int i = 0; i < buttons.length; i++) {
             buttons[i].setBackground(null);
         }
+
         pw.println(theAnswer);
-    };
+    };//cnt
 
     ActionListener clientListener = e -> {
-
         JButton temp = (JButton) e.getSource();
+        categoryChooser.setEnabled(false);
+        categorybutton.setEnabled(false);
         for (int i = 0; i < buttons.length; i++) {
             buttons[i].setEnabled(false);
         }
@@ -172,6 +180,7 @@ public class Client extends JFrame {
         } else {
             temp.setBackground(Color.RED);
             temp.setOpaque(true);
+
             for (int i = 0; i < buttons.length; i++) {
                 if (buttons[i].getText().equalsIgnoreCase(rightAnswer)) {
                     buttons[i].setBackground(Color.green);
@@ -179,14 +188,13 @@ public class Client extends JFrame {
                 }
             }
         }
-    }
+    }//changeColor
 
     public static void main(String[] args) {
 
         try {
             new Client();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

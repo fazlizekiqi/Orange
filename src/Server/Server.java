@@ -38,9 +38,8 @@ public class Server {
             player1.setOponentPlayer(player2);
             player2.setOponentPlayer(player1);
 
-            player1.start();
+            game.start();
 
-            player2.start();
 
         }
     }

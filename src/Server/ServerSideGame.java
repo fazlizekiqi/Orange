@@ -1,12 +1,13 @@
 package Server;
 
 import Database.Database;
+import java.io.IOException;
 import question.Question;
 
 import java.util.List;
 
-// klass med regler for spelet
-public class ServerSideGame {
+
+public class ServerSideGame extends Thread {
 
     Database db = new Database();
     ServerSidePlayer currentPlayer;
@@ -16,35 +17,86 @@ public class ServerSideGame {
     private int currentRound = 0;
 
 
+    private static final int SELECTING_CATEGORY = 0;
+    private static final int ASKING_QUESTIONS = 1;
+    private static final int SWITCH_PLAYER = 2;
+    private static final int ALL_QUESTIONS_ANSWERED = 3;
+    int currentState = SELECTING_CATEGORY;
 
-    public int getQuestionsPerRound() {
-        return questionsPerRound;
+    @Override
+    public void run() {
+        try {
+
+            currentPlayer.oponentPlayer.outputObject
+                .writeObject("Wait until other player chooses a category!");
+            while (true) {
+
+                if (currentState == SELECTING_CATEGORY) {
+                    choosingCategory();
+                    currentState = ASKING_QUESTIONS;
+                    currentPlayer.oponentPlayer.outputObject.writeObject("Wait until other player answer");
+                } else if (currentState == ASKING_QUESTIONS) {
+                    handleQuestions();
+                    currentState = SWITCH_PLAYER;
+                } else if (currentState == SWITCH_PLAYER) {
+                    switchingPlayer();
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }//run
+
+    private void switchingPlayer() throws IOException {
+        if (isRoundOver()) {
+            currentState = SELECTING_CATEGORY;
+        } else {
+            switchPlayer();
+            currentPlayer.oponentPlayer.outputObject
+                .writeObject("Wait for the opponent");
+            currentState = ASKING_QUESTIONS;
+        }
     }
+
+    private void choosingCategory() throws IOException {
+        currentPlayer.outputObject.writeObject("Choose category :");
+        String category = currentPlayer.input.readLine();
+        currentPlayer.game.selectCatagory(category);
+    }
+
+    private void handleQuestions() throws IOException {
+
+        while (!allQuestionsAnswered()) {
+            Question q = questions.get(currentPlayer.questionNumber);
+            currentPlayer.outputObject.writeObject(q);
+            String answer = currentPlayer.input.readLine();
+            if (q.isRightAnswer(answer)) {
+                currentPlayer.points++;
+            }
+
+            currentPlayer.game.nextQuestion();// index ökar med 1
+        }//while
+    }//handleQuestions
+
 
     ServerSideGame(int questionsPerRound, int totalRounds) {
         this.questionsPerRound = questionsPerRound;
         this.totalRounds = totalRounds;
     }
 
-    /**
-     * Metoden tittar om alla runder är spelade för båda spelarna och vilken utav de som har flest poäng
-     * om en av de har mer än den andra så finns det en vinnare
-     * @return sant eller falskt
-     */
+
     public synchronized boolean hasWinner() {
-        if (isGameOver()){
-            if (currentPlayer.points > currentPlayer.oponentPlayer.points || currentPlayer.points < currentPlayer.oponentPlayer.points) {
+        if (isGameOver()) {
+            if (currentPlayer.points > currentPlayer.oponentPlayer.points
+                || currentPlayer.points < currentPlayer.oponentPlayer.points) {
                 return true;
             }
         }
         return false;
     }
 
-    /**
-     * Metoden tittar om alla runder är spelade för båda spelarna och om spelarna har samma resulat i slutet
-     * om de har samma resultat då är det oavgjort
-     * @return
-     */
+
     public synchronized boolean isTie() {
         if (isGameOver()) {
             if (currentPlayer.points == currentPlayer.oponentPlayer.points) {
@@ -54,27 +106,22 @@ public class ServerSideGame {
         return false;
     }
 
-    /**
-     * Metoden kollar om rundan är över genom att kolla på båda spelarnas questionNumber
-     * @return
-     */
-    public synchronized boolean  isRoundOver(){
-        if (currentPlayer.questionNumber == questionsPerRound  && currentPlayer.oponentPlayer.questionNumber == questionsPerRound) {
+
+    public synchronized boolean isRoundOver() {
+        if (currentPlayer.questionNumber == questionsPerRound
+            && currentPlayer.oponentPlayer.questionNumber == questionsPerRound) {
             currentPlayer.questionNumber = 0; // nollställer om rundan är över (Problemet är att det finns risk för
             //  att man kan få samma fråga igen om man väljer samma kategori)
             // en annan lösning är att man endast nollställer om questionNumber når list.size()
             currentPlayer.oponentPlayer.questionNumber = 0;
             ///currentRound++; ökar i selectCategory
             return true;
-        }
-        else
+        } else {
             return false;
+        }
     }
 
-    /**
-     * Metoden kollar om spelet är över
-     * @return
-     */
+
     public synchronized boolean isGameOver() {
         if (currentRound == totalRounds) {
             //currentRound = 0; // nollställa currentRound???
@@ -83,39 +130,25 @@ public class ServerSideGame {
         return false;
     }
 
-    /**
-     * Metoden byter spelare endast om alla frågor är besvarade av nuvarnde spelaren
-     */
+
     public synchronized void switchPlayer() {
-        if (allQuestionsAnswered()) {
-            currentPlayer = currentPlayer.oponentPlayer;
-        }
+        currentPlayer = currentPlayer.oponentPlayer;
+
     }
 
-    /**
-     * Metoden kollar om alla svar är besvarade för spelaren under rundan
-     * om alla frågor är besvara returnerar den sant
-     * @return
-     */
+
     public synchronized boolean allQuestionsAnswered() {
         return currentPlayer.questionNumber == questionsPerRound;
     }
 
-    /**
-     * Metoden skickar endast nästa fråga om alla frågor inte är besvarade för nuvarande spelaren
-     * @return
-     */
+
     public synchronized void nextQuestion() {
         currentPlayer.questionNumber++;
     }
 
-    /**
-     *tar emot från kategori från clienten och
-     * @param categoryName
-     * @return : frågan
-     */
+
     public synchronized void selectCatagory(String categoryName) {
-        questions =  db.getQuestions(categoryName, questionsPerRound);
+        questions = db.getQuestions(categoryName, questionsPerRound);
         currentRound++;
     }
 
@@ -123,7 +156,5 @@ public class ServerSideGame {
         return questions;
     }
 
-    public void gameLogic() {
 
-    }
 }
