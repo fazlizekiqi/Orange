@@ -4,20 +4,17 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+
 import question.Question;
+
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 
 public class Client extends JFrame implements Runnable {
 
@@ -43,7 +40,7 @@ public class Client extends JFrame implements Runnable {
     String rightAnswer;
 
     public Client() throws IOException {
-        socket = new Socket("localhost", 56565);
+        socket = new Socket("localhost", 56565); // 172.20.201.169
         in = new ObjectInputStream(socket.getInputStream());
         pw = new PrintWriter(socket.getOutputStream(), true);
 
@@ -126,10 +123,10 @@ public class Client extends JFrame implements Runnable {
     }
 
     private void showThePoints(Integer[] points) {
-        if(spelare1.equals("Player 1")){
+        if (spelare1.equals("Player 1")) {
             spelare1.setText("P1 : " + points[0]);
             spelare2.setText("P2 : " + points[1]);
-        }else{
+        } else {
             spelare2.setText("P2 : " + points[1]);
             spelare1.setText("P1 : " + points[0]);
         }
@@ -155,6 +152,12 @@ public class Client extends JFrame implements Runnable {
             categoryChooser.setEnabled(false);
             categorybutton.setEnabled(false);
             label.setText(message);
+        } else if (message.startsWith("YOU WIN")) {
+            JOptionPane.showMessageDialog(null, "YOU WIN","Congratulations" , JOptionPane.INFORMATION_MESSAGE);
+        } else if (message.startsWith("YOU LOSE")) {
+            JOptionPane.showMessageDialog(null, "YOU LOSE","You're defeated" , JOptionPane.ERROR_MESSAGE);
+        } else if (message.startsWith("YOU TIED")) {
+            JOptionPane.showMessageDialog(null, "YOU TIED"," " , JOptionPane.INFORMATION_MESSAGE);
         } else {
             categorybutton.setEnabled(true);
             categoryChooser.setEnabled(true);

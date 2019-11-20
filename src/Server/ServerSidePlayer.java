@@ -10,7 +10,7 @@ public class ServerSidePlayer {
 
     Socket socket;
     ServerSidePlayer oponentPlayer;
-    int points = 0;
+    int totPoints = 0;
     int questionNumber = 0;
     String name;
     ServerSideGame game;

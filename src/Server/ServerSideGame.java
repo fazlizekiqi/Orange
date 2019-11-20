@@ -1,9 +1,12 @@
 package Server;
 
 import Database.Database;
+
 import java.io.IOException;
+
 import question.Question;
 
+import javax.swing.*;
 import java.util.List;
 
 
@@ -30,7 +33,7 @@ public class ServerSideGame extends Thread {
             while (true) {
 
                 if (currentState == SELECTING_CATEGORY) {
-                     currentPlayer.oponentPlayer.outputObject.writeObject("Wait until other player chooses a category!");
+                    currentPlayer.oponentPlayer.outputObject.writeObject("Wait until other player chooses a category!");
                     choosingCategory();
                     currentState = ASKING_QUESTIONS;
                     currentPlayer.oponentPlayer.outputObject.writeObject("Wait until other player answer");
@@ -39,8 +42,9 @@ public class ServerSideGame extends Thread {
                     currentState = SWITCH_PLAYER;
                 } else if (currentState == SWITCH_PLAYER) {
                     switchingPlayer();
-                }else if(currentState==ALL_QUESTIONS_ANSWERED){
+                } else if (currentState == ALL_QUESTIONS_ANSWERED) {
                     sendPoints();
+                    hasWinner();
                 }
             }//While
 
@@ -50,13 +54,13 @@ public class ServerSideGame extends Thread {
     }//run
 
     private void sendPoints() throws IOException {
-        if(currentPlayer.name.equalsIgnoreCase("Player 1")){
-            Integer[] points={currentPlayer.points,currentPlayer.oponentPlayer.points};
+        if (currentPlayer.name.equalsIgnoreCase("Player 1")) { // Ändra till currentPlayer.id ?
+            Integer[] points = {currentPlayer.totPoints, currentPlayer.oponentPlayer.totPoints};
             currentPlayer.outputObject.writeObject(points);
             currentPlayer.oponentPlayer.outputObject.writeObject(points);
             currentState = SELECTING_CATEGORY;
-        }else{
-            Integer[] points={currentPlayer.oponentPlayer.points,currentPlayer.points};
+        } else {
+            Integer[] points = {currentPlayer.oponentPlayer.totPoints, currentPlayer.totPoints};
             currentPlayer.oponentPlayer.outputObject.writeObject(points);
             currentPlayer.outputObject.writeObject(points);
             currentState = SELECTING_CATEGORY;
@@ -65,11 +69,11 @@ public class ServerSideGame extends Thread {
 
     private void switchingPlayer() throws IOException {
         if (isRoundOver()) {
-            currentState=ALL_QUESTIONS_ANSWERED;
+            currentState = ALL_QUESTIONS_ANSWERED;
         } else {
             switchPlayer();
             currentPlayer.oponentPlayer.outputObject
-                .writeObject("Wait for the opponent");
+                    .writeObject("Wait for the opponent");
             currentState = ASKING_QUESTIONS;
         }
     }
@@ -88,7 +92,7 @@ public class ServerSideGame extends Thread {
             currentPlayer.outputObject.writeObject(q);
             String answer = currentPlayer.input.readLine();
             if (q.isRightAnswer(answer)) {
-                currentPlayer.points++;
+                currentPlayer.totPoints++;
             }
             currentPlayer.game.nextQuestion();// index ökar med 1
         }//while
@@ -100,21 +104,37 @@ public class ServerSideGame extends Thread {
         this.totalRounds = totalRounds;
     }
 
-
+    public void hasWinner() throws IOException {
+        if (isGameOver()) {
+            if (currentPlayer.totPoints > currentPlayer.oponentPlayer.totPoints) {
+                currentPlayer.outputObject.writeObject("YOU WIN");
+                currentPlayer.oponentPlayer.outputObject.writeObject("YOU LOSE");
+            } else if (currentPlayer.totPoints < currentPlayer.oponentPlayer.totPoints) {
+                currentPlayer.outputObject.writeObject("YOU LOSE");
+                currentPlayer.oponentPlayer.outputObject.writeObject("YOU WIN");
+            } else {
+                currentPlayer.outputObject.writeObject("YOU TIED");
+                currentPlayer.oponentPlayer.outputObject.writeObject("YOU TIED");
+            }
+        }
+    }
+  /*
     public synchronized boolean hasWinner() {
         if (isGameOver()) {
-            if (currentPlayer.points > currentPlayer.oponentPlayer.points
-                || currentPlayer.points < currentPlayer.oponentPlayer.points) {
+            if (currentPlayer.totPoints > currentPlayer.oponentPlayer.totPoints
+                    || currentPlayer.totPoints < currentPlayer.oponentPlayer.totPoints) {
                 return true;
             }
         }
         return false;
     }
 
+   */
+
 
     public synchronized boolean isTie() {
         if (isGameOver()) {
-            if (currentPlayer.points == currentPlayer.oponentPlayer.points) {
+            if (currentPlayer.totPoints == currentPlayer.oponentPlayer.totPoints) {
                 return true;
             }
         }
@@ -124,7 +144,7 @@ public class ServerSideGame extends Thread {
 
     public synchronized boolean isRoundOver() {
         if (currentPlayer.questionNumber == questionsPerRound
-            && currentPlayer.oponentPlayer.questionNumber == questionsPerRound) {
+                && currentPlayer.oponentPlayer.questionNumber == questionsPerRound) {
             currentPlayer.questionNumber = 0; // nollställer om rundan är över (Problemet är att det finns risk för
             //  att man kan få samma fråga igen om man väljer samma kategori)
             // en annan lösning är att man endast nollställer om questionNumber når list.size()

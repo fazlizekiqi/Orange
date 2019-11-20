@@ -12,7 +12,7 @@ public class Server {
     public static void main(String[] args) throws IOException {
         ServerSocket listener = null;
         try {
-           listener=new ServerSocket(56565);
+            listener = new ServerSocket(56565);
         } catch (IOException e) {
             System.err.println("Server is not working Fazli");
             e.printStackTrace();
@@ -28,14 +28,14 @@ public class Server {
         questionsPerRound = Integer.parseInt(p.getProperty("questions", "2"));
         totalRounds = Integer.parseInt(p.getProperty("rounds", "2"));
 
-        while(true){
+        while (true) {
 
-            ServerSideGame game=new ServerSideGame(questionsPerRound, totalRounds);
+            ServerSideGame game = new ServerSideGame(questionsPerRound, totalRounds);
 
-            ServerSidePlayer player1 = new ServerSidePlayer(listener.accept(),"Player 1",game);
-            ServerSidePlayer player2 = new ServerSidePlayer(listener.accept(),"Player 2",game);
+            ServerSidePlayer player1 = new ServerSidePlayer(listener.accept(), "Player 1", game);
+            ServerSidePlayer player2 = new ServerSidePlayer(listener.accept(), "Player 2", game);
 
-            game.currentPlayer=player1;
+            game.currentPlayer = player1;
             player1.setOponentPlayer(player2);
             player2.setOponentPlayer(player1);
 
