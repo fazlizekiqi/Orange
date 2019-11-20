@@ -127,11 +127,11 @@ public class Client extends JFrame implements Runnable {
 
     private void showThePoints(Integer[] points) {
         if(spelare1.equals("Player 1")){
-            spelare1.setText("P1 : " + points[1]);
-            spelare2.setText("P2 : " + points[0]);
+            spelare1.setText("P1 : " + points[0]);
+            spelare2.setText("P2 : " + points[1]);
         }else{
-            spelare2.setText("P2 : " + points[0]);
-            spelare1.setText("P1 : " + points[1]);
+            spelare2.setText("P2 : " + points[1]);
+            spelare1.setText("P1 : " + points[0]);
         }
     }
 

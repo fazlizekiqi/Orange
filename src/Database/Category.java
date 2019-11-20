@@ -4,6 +4,7 @@ import question.Question;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 
 public class Category {
@@ -28,6 +29,7 @@ public class Category {
                     tempQuestion.alternatives.add(altA[i]);
                 }
                 Collections.shuffle(tempQuestion.alternatives);
+                Collections.shuffle(questions);
                 questions.add(tempQuestion);
             }
         } catch (FileNotFoundException e) {

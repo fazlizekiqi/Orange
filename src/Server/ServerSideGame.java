@@ -40,10 +40,7 @@ public class ServerSideGame extends Thread {
                 } else if (currentState == SWITCH_PLAYER) {
                     switchingPlayer();
                 }else if(currentState==ALL_QUESTIONS_ANSWERED){
-                    Integer[] points={currentPlayer.points,currentPlayer.oponentPlayer.points};
-                    currentPlayer.outputObject.writeObject(points);
-                    currentPlayer.oponentPlayer.outputObject.writeObject(points);
-                    currentState = SELECTING_CATEGORY;
+                    sendPoints();
                 }
             }//While
 
@@ -51,6 +48,20 @@ public class ServerSideGame extends Thread {
             e.printStackTrace();
         }
     }//run
+
+    private void sendPoints() throws IOException {
+        if(currentPlayer.name.equalsIgnoreCase("Player 1")){
+            Integer[] points={currentPlayer.points,currentPlayer.oponentPlayer.points};
+            currentPlayer.outputObject.writeObject(points);
+            currentPlayer.oponentPlayer.outputObject.writeObject(points);
+            currentState = SELECTING_CATEGORY;
+        }else{
+            Integer[] points={currentPlayer.oponentPlayer.points,currentPlayer.points};
+            currentPlayer.oponentPlayer.outputObject.writeObject(points);
+            currentPlayer.outputObject.writeObject(points);
+            currentState = SELECTING_CATEGORY;
+        }
+    }
 
     private void switchingPlayer() throws IOException {
         if (isRoundOver()) {
