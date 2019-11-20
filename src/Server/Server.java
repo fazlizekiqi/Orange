@@ -14,6 +14,7 @@ public class Server {
         try {
            listener=new ServerSocket(56565);
         } catch (IOException e) {
+            System.err.println("Server is not working Fazli");
             e.printStackTrace();
         }
 
@@ -31,16 +32,15 @@ public class Server {
 
             ServerSideGame game=new ServerSideGame(questionsPerRound, totalRounds);
 
-            ServerSidePlayer player1=new ServerSidePlayer(listener.accept(),"Player 1",game);
-            ServerSidePlayer player2=new ServerSidePlayer(listener.accept(),"Player 2",game);
+            ServerSidePlayer player1 = new ServerSidePlayer(listener.accept(),"Player 1",game);
+            ServerSidePlayer player2 = new ServerSidePlayer(listener.accept(),"Player 2",game);
 
             game.currentPlayer=player1;
             player1.setOponentPlayer(player2);
             player2.setOponentPlayer(player1);
 
-            //player1.start();
-            //player2.start();
             game.start();
+
 
         }
     }

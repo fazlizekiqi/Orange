@@ -18,13 +18,13 @@ public class Database {
     Category random = new Category("catagoryFiles/RandomQuiz.txt");
 
 
-    public List<Question> getQuestions(String searchedCategory, int antalFrågor) {
+    public List<Question> getQuestions(String wantedCategory, int antalFrågor) {
 
-        if (searchedCategory.equalsIgnoreCase("candy")) {
+        if (wantedCategory.equalsIgnoreCase("candy")) {
             return candy.questions.subList(0, antalFrågor);
-        }else if(searchedCategory.equalsIgnoreCase("egg"))
+        }else if(wantedCategory.equalsIgnoreCase("egg"))
             return egg.questions.subList(0, antalFrågor);
-        else if(searchedCategory.equalsIgnoreCase("famous"))
+        else if(wantedCategory.equalsIgnoreCase("famous"))
             return famous.questions.subList(0, antalFrågor);
         else
             return random.questions.subList(0, antalFrågor);
@@ -32,7 +32,7 @@ public class Database {
     }
 
     public static void main(String[] args) {
-        // Bara för att testa filsökning
+
         new Database();
     }
 

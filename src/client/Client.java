@@ -4,9 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.List;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.TitledBorder;
 import question.Question;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
@@ -21,27 +19,26 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-public class Client extends JFrame {
+public class Client extends JFrame implements Runnable {
 
     Socket socket;
     ObjectInputStream in;
     PrintWriter pw;
     private final String[] colors = {"Candy", "Egg", "Famous", "Random"};
-    private JComboBox colChooser;
+    private JComboBox categoryChooser;
     private JPanel p = new JPanel();
-    private final String[] nr = {"2", "3", "4", "5", "6", "7", "8", "9", "10"};
-    private JComboBox numbers;
-    private final String[] rung = {"1", "2", "3", "4"};
-    private JComboBox runder;
-    JButton button = new JButton("Start Game");
+
+    JButton categorybutton = new JButton("Start Game");
     JButton continueButton = new JButton("Continue");
     JButton[] buttons = new JButton[4];
     String[] strings = {"Allan", "Fazli Zekiqi", "Victor J", "Victor O"};
-    JLabel label = new JLabel("HÄR KOMMMER VI HA FRÅGAN?", SwingConstants.CENTER);
-    JLabel s1 = new JLabel("Player 1");
-    JLabel s2 = new JLabel("Player 2");
+    JLabel label = new JLabel("Welcome to the Quiz Fight", SwingConstants.CENTER);
+    JLabel spelare1 = new JLabel("s1");
+    JLabel spelare2 = new JLabel("s2");
     JPanel gridPanel = new JPanel(new GridLayout(2, 2));
     JPanel centerPanel = new JPanel(new BorderLayout());
+    Thread thread = new Thread(this);
+    int counter;
 
     String rightAnswer;
 
@@ -53,30 +50,30 @@ public class Client extends JFrame {
         gridPanel.setPreferredSize(new Dimension(500, 200));
         gridPanel.setBorder(new EmptyBorder(0, 30, 0, 0));
         setLayout(new BorderLayout());
-        colChooser = new JComboBox(colors);
-        colChooser.setSelectedIndex(-1);
+        categoryChooser = new JComboBox(colors);
+        categoryChooser.setSelectedIndex(0);
 
-//        numbers=new JComboBox(nr);
-//        numbers.setSelectedItem(-1);
-//        runder=new JComboBox(rung);
-//        runder.setSelectedIndex(-1);
-//        p.add(numbers);
-//        p.add(runder);
-
-        p.add(colChooser);
-        p.add(button);
+        p.add(categoryChooser);
+        p.add(categorybutton);
         centerPanel.add(label, BorderLayout.CENTER);
         for (int i = 0; i < buttons.length; i++) {
             buttons[i] = new JButton(strings[i]);
-            buttons[i].addActionListener(clientListener);
+            buttons[i].addActionListener(alternativesListener);
+            buttons[i].setEnabled(false);
             gridPanel.add(buttons[i]);
 
+
         }
+        categorybutton.addActionListener(e -> {
+            pw.println(categoryChooser.getSelectedItem());
+            System.out.println("VALD KATEGORI" + categoryChooser.getSelectedItem());
+
+        });
 
         add(continueButton, BorderLayout.SOUTH);
         continueButton.setVisible(false);
-        add(s1, BorderLayout.WEST);
-        add(s2, BorderLayout.EAST);
+        add(spelare1, BorderLayout.WEST);
+        add(spelare2, BorderLayout.EAST);
 
         centerPanel.add(gridPanel, BorderLayout.SOUTH);
         add(centerPanel, BorderLayout.CENTER);
@@ -85,76 +82,131 @@ public class Client extends JFrame {
         setSize(500, 500);
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        gameLoop();
+        thread.start();
 
     }//CONSTRUCTOR
 
-    public void gameLoop() {
+    @Override
+    public void run() {
+
         Object obj;
+        continueButton.addActionListener(continueButtonListener);
 
         try {
             while ((obj = in.readObject()) != null) {
                 if (obj instanceof Question) {
-                    Question q = (Question) obj;
-                    label.setText(q.getQuestion());
-                    ArrayList<String> alt = q.getAlternatives();
-                    rightAnswer = q.getRightAnswer();
-                    for (int i = 0; i < alt.size(); i++) {
-                        buttons[i].setText(alt.get(i));
-                        buttons[i].addActionListener(clientListener);
-                    }
-
-                    //TODO display buttons and make them visible/invisible
+                    Question question = (Question) obj;
+                    showTheQuestion(question);
                 } else if (obj instanceof String) {
-                    String messageFromTheServer = (String) obj;
-                    label.setText(messageFromTheServer);
-                    button.addActionListener(e -> {
-                        colChooser.setEnabled(false);
-                        pw.println(colChooser.getSelectedItem());
-                    });
+                    String message = (String) obj;
+                    showTheMessageFromServer(message);
+
                 } else if (obj instanceof Integer[]) {
                     Integer[] points = (Integer[]) obj;
-                    System.out.println("Spelare 1 points :" + points[0]);
-                    System.out.println("Spelare 2 points :" + points[1]);
+                    showThePoints(points);
                 }
-            }
+            }//while
+
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-// throws IOException, ClassNotFoundException
-    }//gameLoop()
+    }//run()
 
-    ActionListener cnt =e->{
-      continueButton.setVisible(false);
+    private void showTheQuestion(Question question) {
+        System.out.println(question.getQuestion());
+        label.setText(question.getQuestion());
+        ArrayList<String> alt = question.getAlternatives();
+        rightAnswer = question.getRightAnswer();
+        for (int i = 0; i < alt.size(); i++) {
+            buttons[i].setEnabled(true);
+            buttons[i].setText(alt.get(i));
+        }
+    }
+
+    private void showThePoints(Integer[] points) {
+        if(spelare1.equals("Player 1")){
+            spelare1.setText("P1 : " + points[0]);
+            spelare2.setText("P2 : " + points[1]);
+        }else{
+            spelare2.setText("P2 : " + points[1]);
+            spelare1.setText("P1 : " + points[0]);
+        }
+    }
+
+    private void showTheMessageFromServer(String message) {
+        if (message.startsWith("Welcome")) {
+            message = message.substring(message.indexOf(' '));
+            if (message.contains("1")) {
+                spelare1.setText(message);
+                setTitle(message);
+                spelare2.setText("Player 2");
+            } else {
+                spelare2.setText(message);
+                setTitle(message);
+                spelare1.setText("Player 1");
+            }
+
+        } else if (message.startsWith("Wait")) {
+            for (int i = 0; i < buttons.length; i++) {
+                buttons[i].setEnabled(false);
+            }
+            categoryChooser.setEnabled(false);
+            categorybutton.setEnabled(false);
+            label.setText(message);
+        } else {
+            categorybutton.setEnabled(true);
+            categoryChooser.setEnabled(true);
+            label.setText(message);
+        }
+    }//showTheMessageFromTheServer
+
+    String theAnswerFromUser;
+    ActionListener continueButtonListener = e -> {
+        continueButton.setVisible(false);
         for (int i = 0; i < buttons.length; i++) {
             buttons[i].setBackground(null);
         }
-    };
 
-    
-    ActionListener clientListener = e -> {
-        continueButton.addActionListener(cnt);
 
+        pw.println(theAnswerFromUser);
+    };//cnt
+
+
+    ActionListener alternativesListener = e -> {
         JButton temp = (JButton) e.getSource();
-        changeColor(temp);
+        categoryChooser.setEnabled(false);
+        categorybutton.setEnabled(false);
+        for (int i = 0; i < buttons.length; i++) {
+            buttons[i].setEnabled(false);
+        }
+        changeButtonsColor(temp);
         continueButton.setVisible(true);
-
+        theAnswerFromUser = temp.getText();
     };//clientListener
 
-    private void changeColor(JButton temp) {
+    private void changeButtonsColor(JButton temp) {
         if (temp.getText().equalsIgnoreCase(rightAnswer)) {
             temp.setBackground(Color.GREEN);
+            temp.setOpaque(true);
         } else {
             temp.setBackground(Color.RED);
+            temp.setOpaque(true);
+
+            for (int i = 0; i < buttons.length; i++) {
+                if (buttons[i].getText().equalsIgnoreCase(rightAnswer)) {
+                    buttons[i].setBackground(Color.green);
+                    buttons[i].setOpaque(true);
+                }
+            }
         }
-        pw.println(temp.getText());
-    }
+    }//changeColor
 
     public static void main(String[] args) {
+
         try {
-            Client client = new Client();
+            new Client();
         } catch (IOException e) {
             e.printStackTrace();
         }
