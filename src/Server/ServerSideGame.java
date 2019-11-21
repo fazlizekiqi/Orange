@@ -6,7 +6,6 @@ import java.io.IOException;
 
 import question.Question;
 
-import javax.swing.*;
 import java.util.List;
 
 
@@ -18,7 +17,6 @@ public class ServerSideGame extends Thread {
     private int questionsPerRound;
     private int totalRounds;
     private int currentRound = 0;
-
 
     private static final int SELECTING_CATEGORY = 0;
     private static final int ASKING_QUESTIONS = 1;
@@ -45,6 +43,7 @@ public class ServerSideGame extends Thread {
                 } else if (currentState == ALL_QUESTIONS_ANSWERED) {
                     sendPoints();
                     hasWinner();
+                    resetGame();
                 }
             }//While
 
@@ -52,6 +51,15 @@ public class ServerSideGame extends Thread {
             e.printStackTrace();
         }
     }//run
+
+    private void resetGame() throws IOException {
+        if (isGameOver()) {
+            currentPlayer.totPoints = 0;
+            currentPlayer.oponentPlayer.totPoints = 0;
+            currentRound = currentRound % totalRounds;
+            sendPoints();
+        }
+    }
 
     private void sendPoints() throws IOException {
         if (currentPlayer.name.equalsIgnoreCase("Player 1")) { // Ändra till currentPlayer.id ?

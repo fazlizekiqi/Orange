@@ -64,6 +64,8 @@ public class Client extends JFrame implements Runnable {
         categorybutton.addActionListener(e -> {
             pw.println(categoryChooser.getSelectedItem());
             System.out.println("VALD KATEGORI" + categoryChooser.getSelectedItem());
+            categoryChooser.setEnabled(false);
+            categorybutton.setEnabled(false);
 
         });
 
