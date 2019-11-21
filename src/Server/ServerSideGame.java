@@ -118,19 +118,6 @@ public class ServerSideGame extends Thread {
             }
         }
     }
-  /*
-    public synchronized boolean hasWinner() {
-        if (isGameOver()) {
-            if (currentPlayer.totPoints > currentPlayer.oponentPlayer.totPoints
-                    || currentPlayer.totPoints < currentPlayer.oponentPlayer.totPoints) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-   */
-
 
     public synchronized boolean isTie() {
         if (isGameOver()) {

@@ -153,11 +153,11 @@ public class Client extends JFrame implements Runnable {
             categorybutton.setEnabled(false);
             label.setText(message);
         } else if (message.startsWith("YOU WIN")) {
-            JOptionPane.showMessageDialog(null, "YOU WIN","Congratulations" , JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "YOU WIN", "Congratulations", JOptionPane.INFORMATION_MESSAGE);
         } else if (message.startsWith("YOU LOSE")) {
-            JOptionPane.showMessageDialog(null, "YOU LOSE","You're defeated" , JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "YOU LOSE", "You're defeated", JOptionPane.ERROR_MESSAGE);
         } else if (message.startsWith("YOU TIED")) {
-            JOptionPane.showMessageDialog(null, "YOU TIED"," " , JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "YOU TIED", " ", JOptionPane.INFORMATION_MESSAGE);
         } else {
             categorybutton.setEnabled(true);
             categoryChooser.setEnabled(true);
