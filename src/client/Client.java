@@ -1,20 +1,17 @@
 package client;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-
 import question.Question;
 
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Client extends JFrame implements Runnable {
 
@@ -103,14 +100,36 @@ public class Client extends JFrame implements Runnable {
                 } else if (obj instanceof Integer[]) {
                     Integer[] points = (Integer[]) obj;
                     showThePoints(points);
+
+                } else if (obj instanceof ArrayList) {
+                    ArrayList<java.util.List> lista;
+                    lista = (ArrayList) obj;
+                    for (List l : lista) System.out.println(l.toString());
+
+
+                } else if (obj instanceof Integer[][]) {
+                    Integer[][] pointsHistory = (Integer[][]) obj;
+                    System.out.print("\nSpelare 1: ");
+                    for (int i : pointsHistory[0]) System.out.print(i + " ");
+                    System.out.print("\nSpelare 2: ");
+                    for (int i : pointsHistory[1]) System.out.print(i + " ");
+
+                    //pointsHistory[0][0] = player1's score in rouond1
+                    //pointsHistory[0][1] = player1's score in rouond2
+                    //pointsHistory[1][0] = player2's score in rouond1
+                    //pointsHistory[1][1] = player2's score in rouond2
                 }
+
             }//while
 
-        } catch (IOException e) {
+        } catch (
+                IOException e) {
             e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (
+                ClassNotFoundException e) {
             e.printStackTrace();
         }
+
     }//run()
 
     private void showTheQuestion(Question question) {
@@ -123,7 +142,7 @@ public class Client extends JFrame implements Runnable {
             buttons[i].setText(alt.get(i));
         }
     }
-    
+
     private void showThePoints(Integer[] points) {
         if (spelare1.equals("Player 1")) {
             spelare1.setText("P1 : " + points[0]);

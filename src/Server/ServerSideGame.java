@@ -1,11 +1,10 @@
 package Server;
 
 import Database.Database;
-
-import java.io.IOException;
-
 import question.Question;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -17,6 +16,7 @@ public class ServerSideGame extends Thread {
     private int questionsPerRound;
     private int totalRounds;
     private int currentRound = 0;
+
 
     private static final int SELECTING_CATEGORY = 0;
     private static final int ASKING_QUESTIONS = 1;
@@ -42,6 +42,7 @@ public class ServerSideGame extends Thread {
                     switchingPlayer();
                 } else if (currentState == ALL_QUESTIONS_ANSWERED) {
                     sendPoints();
+                    sendPointsHistory();
                     hasWinner();
                     resetGame();
                 }
@@ -61,11 +62,28 @@ public class ServerSideGame extends Thread {
         }
     }
 
+    private void sendPointsHistory() throws IOException {
+        ArrayList<List> listan = new ArrayList<>();
+        listan.add(currentPlayer.scoreHistory);
+        System.out.println("send points history test: " + listan);
+        listan.add(currentPlayer.oponentPlayer.scoreHistory);
+        System.out.println("send points history test efter oponentplayer: " + listan);
+
+//        Integer[][] pointsHistory = {currentPlayer.scoreHistory, currentPlayer.oponentPlayer.scoreHistory};
+        //ArrayList<Integer>[] pointsHistoryList = {currentPlayer.scoreHistory, currentPlayer.oponentPlayer.scoreHistory};
+//        currentPlayer.scoreHistory.add()
+        currentPlayer.outputObject.writeObject(listan);
+        currentPlayer.oponentPlayer.outputObject.writeObject(listan);
+
+
+    }
+
     private void sendPoints() throws IOException {
         if (currentPlayer.name.equalsIgnoreCase("Player 1")) { // Ändra till currentPlayer.id ?
             Integer[] points = {currentPlayer.totPoints, currentPlayer.oponentPlayer.totPoints};
             currentPlayer.outputObject.writeObject(points);
             currentPlayer.oponentPlayer.outputObject.writeObject(points);
+
             currentState = SELECTING_CATEGORY;
         } else {
             Integer[] points = {currentPlayer.oponentPlayer.totPoints, currentPlayer.totPoints};
@@ -95,6 +113,7 @@ public class ServerSideGame extends Thread {
 
     private void handleQuestions() throws IOException {
         Question q;
+        int tempScore = 0;
         while (!allQuestionsAnswered()) {
             q = questions.get(currentPlayer.questionNumber);
             currentPlayer.outputObject.writeObject(q);
@@ -103,9 +122,15 @@ public class ServerSideGame extends Thread {
 
             if (q.isRightAnswer(answer)) {
                 currentPlayer.totPoints++;
+                tempScore++;
             }
             currentPlayer.game.nextQuestion();// index ökar med 1
-        }//while
+        }
+        currentPlayer.scoreHistory.add(tempScore);
+     //   System.out.println(currentPlayer.scoreHistory.toString());
+
+        tempScore = 0;
+        //while
     }//handleQuestions
 
 
@@ -188,5 +213,7 @@ public class ServerSideGame extends Thread {
         return questions;
     }
 
-
+    public int getTotalRounds() {
+        return totalRounds;
+    }
 }
