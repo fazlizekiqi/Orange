@@ -99,6 +99,8 @@ public class ServerSideGame extends Thread {
             q = questions.get(currentPlayer.questionNumber);
             currentPlayer.outputObject.writeObject(q);
             String answer = currentPlayer.input.readLine();
+            //questions.remove(0);
+
             if (q.isRightAnswer(answer)) {
                 currentPlayer.totPoints++;
             }

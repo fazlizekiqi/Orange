@@ -123,7 +123,7 @@ public class Client extends JFrame implements Runnable {
             buttons[i].setText(alt.get(i));
         }
     }
-
+    
     private void showThePoints(Integer[] points) {
         if (spelare1.equals("Player 1")) {
             spelare1.setText("P1 : " + points[0]);
