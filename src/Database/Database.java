@@ -1,9 +1,12 @@
 package Database;
 
 import question.Question;
+
+import java.util.Collections;
 import java.util.List;
 
 public class Database {
+    int qwer = 0;
 
 
 //    Category candy = new Category("catagoryFiles\\CandyQuiz.txt");
@@ -19,21 +22,32 @@ public class Database {
 
 
     public List<Question> getQuestions(String wantedCategory, int antalFrågor) {
-
         if (wantedCategory.equalsIgnoreCase("candy")) {
-            return candy.questions.subList(0, antalFrågor);
-        }else if(wantedCategory.equalsIgnoreCase("egg"))
-            return egg.questions.subList(0, antalFrågor);
-        else if(wantedCategory.equalsIgnoreCase("famous"))
-            return famous.questions.subList(0, antalFrågor);
-        else
-            return random.questions.subList(0, antalFrågor);
+            qwer += antalFrågor;
+            return candy.questions.subList(qwer, qwer + antalFrågor);
+        } else if (wantedCategory.equalsIgnoreCase("egg")) {
+            qwer += antalFrågor;
+            return egg.questions.subList(qwer, qwer + antalFrågor);
+        } else if (wantedCategory.equalsIgnoreCase("famous")) {
+            qwer += antalFrågor;
+            return famous.questions.subList(qwer, qwer + antalFrågor);
+        } else
+            qwer += antalFrågor;
+        return random.questions.subList(qwer, qwer + antalFrågor);
 
     }
 
     public static void main(String[] args) {
-
         new Database();
     }
 
+    public void resetCount() {
+        this.qwer = 0;
+    }
+    public void shuffleLists(){
+        Collections.shuffle(candy.questions);
+        Collections.shuffle(egg.questions);
+        Collections.shuffle(famous.questions);
+        Collections.shuffle(random.questions);
+    }
 }
