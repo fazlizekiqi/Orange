@@ -16,7 +16,6 @@ public class ServerSidePlayer {
     String name;
     ServerSideGame game;
     public List <Integer> scoreHistory = new ArrayList<>();
-    Integer[] scoreHistoryArray;
 
     BufferedReader input;
     ObjectOutputStream outputObject;
@@ -25,7 +24,6 @@ public class ServerSidePlayer {
         this.socket = socket;
         this.name = name;
         this.game = game;
-        scoreHistoryArray = new Integer[game.getTotalRounds()];
 
         try {
             outputObject = new ObjectOutputStream(socket.getOutputStream());

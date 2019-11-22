@@ -105,21 +105,7 @@ public class Client extends JFrame implements Runnable {
                     ArrayList<java.util.List> lista;
                     lista = (ArrayList) obj;
                     for (List l : lista) System.out.println(l.toString());
-
-
-                } else if (obj instanceof Integer[][]) {
-                    Integer[][] pointsHistory = (Integer[][]) obj;
-                    System.out.print("\nSpelare 1: ");
-                    for (int i : pointsHistory[0]) System.out.print(i + " ");
-                    System.out.print("\nSpelare 2: ");
-                    for (int i : pointsHistory[1]) System.out.print(i + " ");
-
-                    //pointsHistory[0][0] = player1's score in rouond1
-                    //pointsHistory[0][1] = player1's score in rouond2
-                    //pointsHistory[1][0] = player2's score in rouond1
-                    //pointsHistory[1][1] = player2's score in rouond2
                 }
-
             }//while
 
         } catch (

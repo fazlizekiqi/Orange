@@ -63,17 +63,20 @@ public class ServerSideGame extends Thread {
     }
 
     private void sendPointsHistory() throws IOException {
-        ArrayList<List> listan = new ArrayList<>();
-        listan.add(currentPlayer.scoreHistory);
-        System.out.println("send points history test: " + listan);
-        listan.add(currentPlayer.oponentPlayer.scoreHistory);
-        System.out.println("send points history test efter oponentplayer: " + listan);
+        ServerSidePlayer playerOne = currentPlayer;
+        if (!currentPlayer.name.equalsIgnoreCase("Player 1")) {
+            playerOne = currentPlayer.oponentPlayer;
+        }
+            ArrayList<List> listan = new ArrayList<>();
+            listan.add(playerOne.scoreHistory);
+            //System.out.println("send points history test: " + listan);
+            listan.add(playerOne.oponentPlayer.scoreHistory);
+            //System.out.println("send points history test efter oponentplayer: " + listan);
 
-//        Integer[][] pointsHistory = {currentPlayer.scoreHistory, currentPlayer.oponentPlayer.scoreHistory};
-        //ArrayList<Integer>[] pointsHistoryList = {currentPlayer.scoreHistory, currentPlayer.oponentPlayer.scoreHistory};
-//        currentPlayer.scoreHistory.add()
-        currentPlayer.outputObject.writeObject(listan);
-        currentPlayer.oponentPlayer.outputObject.writeObject(listan);
+            currentPlayer.outputObject.reset();
+            currentPlayer.outputObject.writeObject(listan);
+            currentPlayer.oponentPlayer.outputObject.reset();
+            currentPlayer.oponentPlayer.outputObject.writeObject(listan);
 
 
     }
