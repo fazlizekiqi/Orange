@@ -2,6 +2,7 @@ package question;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Question implements Serializable {
 
@@ -30,6 +31,7 @@ public class Question implements Serializable {
     }
 
     public ArrayList<String> getAlternatives() {
+        Collections.shuffle(alternatives);
         return alternatives;
     }
 
