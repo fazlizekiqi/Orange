@@ -22,7 +22,7 @@ public class Database {
     private Category famous = new Category("catagoryFiles/FamousQuiz.txt");
     private Category random = new Category("catagoryFiles/RandomQuiz.txt");
 
-    Database() {
+    public Database() {
         categories.put("candy", candy);
         categories.put("egg", egg);
         categories.put("famous", famous);
@@ -51,9 +51,9 @@ public class Database {
         return random.questions.subList(qwer, qwer + numberOfQuestions);*/
     }
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         new Database();
-    }
+    }*/
 
     public void resetCount() {
         this.qwer = 0;
