@@ -6,8 +6,8 @@ import java.net.ServerSocket;
 import java.util.Properties;
 
 public class Server {
-    static int questionsPerRound;
-    static int totalRounds;
+    private static int questionsPerRound;
+    private static int totalRounds;
 
     public static void main(String[] args) throws IOException {
         ServerSocket listener = null;

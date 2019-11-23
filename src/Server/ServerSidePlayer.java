@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ServerSidePlayer {
-    Socket socket;
+    private Socket socket;
     ServerSidePlayer oponentPlayer;
     int totPoints = 0;
     int questionNumber = 0;

@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class Database {
-    int qwer = 0;
+    private int qwer = 0;
 
 //    Category candy = new Category("catagoryFiles\\CandyQuiz.txt");
 //    Category egg = new Category("catagoryFiles\\EggQuiz.txt");
@@ -14,10 +14,10 @@ public class Database {
 //    Category random = new Category("catagoryFiles\\RandomQuiz.txt");
 
     //MAC OCH LINUX
-    Category candy = new Category("catagoryFiles/CandyQuiz.txt");
-    Category egg = new Category("catagoryFiles/EggQuiz.txt");
-    Category famous = new Category("catagoryFiles/FamousQuiz.txt");
-    Category random = new Category("catagoryFiles/RandomQuiz.txt");
+    private Category candy = new Category("catagoryFiles/CandyQuiz.txt");
+    private Category egg = new Category("catagoryFiles/EggQuiz.txt");
+    private Category famous = new Category("catagoryFiles/FamousQuiz.txt");
+    private Category random = new Category("catagoryFiles/RandomQuiz.txt");
 
     public List<Question> getQuestions(String wantedCategory, int antalFrågor) {
         if (wantedCategory.equalsIgnoreCase("candy")) {

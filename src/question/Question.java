@@ -6,8 +6,8 @@ import java.util.Collections;
 
 public class Question implements Serializable {
     static final long serialVersionUID = 42L;
-    String question;
-    String rightAnswer;
+    private String question;
+    private String rightAnswer;
     public ArrayList<String> alternatives = new ArrayList<String>();
 
     public void setQuestion(String question) {

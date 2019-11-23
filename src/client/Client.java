@@ -15,26 +15,26 @@ import java.util.List;
 
 public class Client extends JFrame implements Runnable {
 
-    Socket socket;
-    ObjectInputStream in;
-    PrintWriter pw;
+    private Socket socket;
+    private ObjectInputStream in;
+    private PrintWriter pw;
     private final String[] colors = {"Candy", "Egg", "Famous", "Random"};
     private JComboBox categoryChooser;
     private JPanel p = new JPanel();
 
-    JButton categorybutton = new JButton("Start Game");
-    JButton continueButton = new JButton("Continue");
-    JButton[] buttons = new JButton[4];
-    String[] strings = {"Allan", "Fazli Zekiqi", "Victor J", "Victor O"};
-    JLabel label = new JLabel("Welcome to the Quiz Fight", SwingConstants.CENTER);
-    JLabel spelare1 = new JLabel("s1");
-    JLabel spelare2 = new JLabel("s2");
-    JPanel gridPanel = new JPanel(new GridLayout(2, 2));
-    JPanel centerPanel = new JPanel(new BorderLayout());
-    Thread thread = new Thread(this);
+    private JButton categorybutton = new JButton("Start Game");
+    private JButton continueButton = new JButton("Continue");
+    private JButton[] buttons = new JButton[4];
+    private String[] strings = {"Allan", "Fazli Zekiqi", "Victor J", "Victor O"};
+    private JLabel label = new JLabel("Welcome to the Quiz Fight", SwingConstants.CENTER);
+    private JLabel spelare1 = new JLabel("s1");
+    private JLabel spelare2 = new JLabel("s2");
+    private JPanel gridPanel = new JPanel(new GridLayout(2, 2));
+    private JPanel centerPanel = new JPanel(new BorderLayout());
+    private Thread thread = new Thread(this);
     int counter;
 
-    String rightAnswer;
+    private String rightAnswer;
 
     public Client() throws IOException {
         socket = new Socket("localhost", 56565); // 172.20.201.169
@@ -164,8 +164,8 @@ public class Client extends JFrame implements Runnable {
         }
     }//showTheMessageFromTheServer
 
-    String theAnswerFromUser;
-    ActionListener continueButtonListener = e -> {
+    private String theAnswerFromUser;
+    private ActionListener continueButtonListener = e -> {
         continueButton.setVisible(false);
         for (JButton button : buttons) {
             button.setBackground(null);
@@ -173,12 +173,12 @@ public class Client extends JFrame implements Runnable {
         pw.println(theAnswerFromUser);
     };//cnt
 
-    ActionListener alternativesListener = e -> {
+    private ActionListener alternativesListener = e -> {
         JButton temp = (JButton) e.getSource();
         categoryChooser.setEnabled(false);
         categorybutton.setEnabled(false);
-        for (int i = 0; i < buttons.length; i++) {
-            buttons[i].setEnabled(false);
+        for (JButton button : buttons) {
+            button.setEnabled(false);
         }
         changeButtonsColor(temp);
         continueButton.setVisible(true);

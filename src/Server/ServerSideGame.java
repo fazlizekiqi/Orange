@@ -8,8 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ServerSideGame extends Thread {
-
-    Database db = new Database();
+    private Database db = new Database();
     ServerSidePlayer currentPlayer;
     private List<Question> questions;
     private int questionsPerRound;
@@ -20,7 +19,7 @@ public class ServerSideGame extends Thread {
     private static final int ASKING_QUESTIONS = 1;
     private static final int SWITCH_PLAYER = 2;
     private static final int ALL_QUESTIONS_ANSWERED = 3;
-    int currentState = SELECTING_CATEGORY;
+    private int currentState = SELECTING_CATEGORY;
 
     @Override
     public void run() {
@@ -43,7 +42,6 @@ public class ServerSideGame extends Thread {
                     resetGame();
                 }
             }//While
-
         } catch (IOException e) {
             e.printStackTrace();
         }
