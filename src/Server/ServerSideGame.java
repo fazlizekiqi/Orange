@@ -60,36 +60,36 @@ public class ServerSideGame extends Thread {
         }
     }
 
-    private void sendPointsHistory() throws IOException {
-        ServerSidePlayer playerOne = currentPlayer;
-        if (!currentPlayer.name.equalsIgnoreCase("Player 1")) {
-            playerOne = currentPlayer.oponentPlayer;
+    private ServerSidePlayer getPlayerOne() {
+        if (currentPlayer.name.equalsIgnoreCase("Player 1")) {
+            return currentPlayer;
+        } else {
+            return currentPlayer.oponentPlayer;
         }
+    }
+
+    private ServerSidePlayer getPlayerTwo() {
+        return getPlayerOne().oponentPlayer;
+    }
+
+    private void sendPointsHistory() throws IOException {
         ArrayList<List> listan = new ArrayList<>();
-        listan.add(playerOne.scoreHistory);
+        listan.add(getPlayerOne().scoreHistory);
         //System.out.println("send points history test: " + listan);
-        listan.add(playerOne.oponentPlayer.scoreHistory);
+        listan.add(getPlayerTwo().scoreHistory);
         //System.out.println("send points history test efter oponentplayer: " + listan);
 
-        currentPlayer.outputObject.reset();
-        currentPlayer.outputObject.writeObject(listan);
-        currentPlayer.oponentPlayer.outputObject.reset();
-        currentPlayer.oponentPlayer.outputObject.writeObject(listan);
+        getPlayerOne().outputObject.reset();
+        getPlayerOne().outputObject.writeObject(listan);
+        getPlayerTwo().outputObject.reset();
+        getPlayerTwo().outputObject.writeObject(listan);
     }
 
     private void sendPoints() throws IOException {
-        if (currentPlayer.name.equalsIgnoreCase("Player 1")) { // Ändra till currentPlayer.id ?
-            Integer[] points = {currentPlayer.totPoints, currentPlayer.oponentPlayer.totPoints};
-            currentPlayer.outputObject.writeObject(points);
-            currentPlayer.oponentPlayer.outputObject.writeObject(points);
-
-            currentState = SELECTING_CATEGORY;
-        } else {
-            Integer[] points = {currentPlayer.oponentPlayer.totPoints, currentPlayer.totPoints};
-            currentPlayer.oponentPlayer.outputObject.writeObject(points);
-            currentPlayer.outputObject.writeObject(points);
-            currentState = SELECTING_CATEGORY;
-        }
+        Integer[] points = {getPlayerOne().totPoints, getPlayerTwo().totPoints};
+        getPlayerOne().outputObject.writeObject(points);
+        getPlayerTwo().outputObject.writeObject(points);
+        currentState = SELECTING_CATEGORY;
     }
 
     private void switchingPlayer() throws IOException {
