@@ -6,8 +6,6 @@ import java.net.ServerSocket;
 import java.util.Properties;
 
 public class Server {
-    private static int questionsPerRound;
-    private static int totalRounds;
 
     public static void main(String[] args) throws IOException {
         ServerSocket listener = null;
@@ -25,8 +23,8 @@ public class Server {
             e.printStackTrace();
         }
 
-        questionsPerRound = Integer.parseInt(p.getProperty("questions", "2"));
-        totalRounds = Integer.parseInt(p.getProperty("rounds", "2"));
+        int questionsPerRound = Integer.parseInt(p.getProperty("questions", "2"));
+        int totalRounds = Integer.parseInt(p.getProperty("rounds", "2"));
 
         while (true) {
             ServerSideGame game = new ServerSideGame(questionsPerRound, totalRounds);
