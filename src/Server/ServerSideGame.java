@@ -9,7 +9,7 @@ import java.util.List;
 
 public class ServerSideGame extends Thread {
     private Database db = new Database();
-    ServerSidePlayer currentPlayer;
+    private ServerSidePlayer currentPlayer;
     private List<Question> questions;
     private int questionsPerRound;
     private int totalRounds;
@@ -56,6 +56,12 @@ public class ServerSideGame extends Thread {
             db.resetCount();
             db.shuffleLists();
         }
+    }
+
+    void setPlayers(ServerSidePlayer playerOne, ServerSidePlayer playerTwo) {
+        playerOne.setOpponent(playerTwo);
+        playerTwo.setOpponent(playerOne);
+        currentPlayer = playerOne;
     }
 
     private ServerSidePlayer getPlayerOne() {
@@ -107,7 +113,7 @@ public class ServerSideGame extends Thread {
     private void choosingCategory() throws IOException {
         currentPlayer.outputObject.writeObject("Choose category :");
         String category = currentPlayer.input.readLine();
-        currentPlayer.game.selectCatagory(category);
+        currentPlayer.game.selectCategory(category);
     }
 
     private void handleQuestions() throws IOException {
@@ -182,16 +188,8 @@ public class ServerSideGame extends Thread {
         currentPlayer.questionNumber++;
     }
 
-    public synchronized void selectCatagory(String categoryName) {
+    public synchronized void selectCategory(String categoryName) {
         questions = db.getQuestions(categoryName, questionsPerRound);
         currentRound++;
-    }
-
-    public List<Question> getQuestions() {
-        return questions;
-    }
-
-    public int getTotalRounds() {
-        return totalRounds;
     }
 }

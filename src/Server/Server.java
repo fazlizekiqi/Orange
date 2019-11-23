@@ -34,10 +34,7 @@ public class Server {
             ServerSidePlayer player1 = new ServerSidePlayer(listener.accept(), "Player 1", game);
             ServerSidePlayer player2 = new ServerSidePlayer(listener.accept(), "Player 2", game);
 
-            game.currentPlayer = player1;
-            player1.setOpponent(player2);
-            player2.setOpponent(player1);
-
+            game.setPlayers(player1, player2);
             game.start();
         }
     }
