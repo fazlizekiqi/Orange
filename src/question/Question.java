@@ -8,7 +8,7 @@ public class Question implements Serializable {
     static final long serialVersionUID = 42L;
     private String question;
     private String rightAnswer;
-    public ArrayList<String> alternatives = new ArrayList<String>();
+    public ArrayList<String> alternatives = new ArrayList<>();
 
     public void setQuestion(String question) {
         this.question = question;
