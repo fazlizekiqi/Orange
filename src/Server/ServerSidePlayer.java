@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ServerSidePlayer {
-    ServerSidePlayer opponent;
+    private ServerSidePlayer opponent;
     int totPoints = 0;
     int questionNumber = 0;
     String name;
