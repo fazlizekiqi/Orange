@@ -27,8 +27,8 @@ public class Client extends JFrame implements Runnable {
     private JButton[] buttons = new JButton[4];
     private String[] strings = {"Allan", "Fazli Zekiqi", "Victor J", "Victor O"};
     private JLabel label = new JLabel("Welcome to the Quiz Fight", SwingConstants.CENTER);
-    private JLabel spelare1 = new JLabel("s1");
-    private JLabel spelare2 = new JLabel("s2");
+    private JLabel playerOne = new JLabel("s1");
+    private JLabel playerTwo = new JLabel("s2");
     private JPanel gridPanel = new JPanel(new GridLayout(2, 2));
     private JPanel centerPanel = new JPanel(new BorderLayout());
     private Thread thread = new Thread(this);
@@ -67,8 +67,8 @@ public class Client extends JFrame implements Runnable {
 
         add(continueButton, BorderLayout.SOUTH);
         continueButton.setVisible(false);
-        add(spelare1, BorderLayout.WEST);
-        add(spelare2, BorderLayout.EAST);
+        add(playerOne, BorderLayout.WEST);
+        add(playerTwo, BorderLayout.EAST);
 
         centerPanel.add(gridPanel, BorderLayout.SOUTH);
         add(centerPanel, BorderLayout.CENTER);
@@ -123,12 +123,12 @@ public class Client extends JFrame implements Runnable {
     }
 
     private void showThePoints(Integer[] points) {
-        if (spelare1.equals("Player 1")) {
-            spelare1.setText("P1 : " + points[0]);
-            spelare2.setText("P2 : " + points[1]);
+        if (playerOne.equals("Player 1")) {
+            playerOne.setText("P1 : " + points[0]);
+            playerTwo.setText("P2 : " + points[1]);
         } else {
-            spelare2.setText("P2 : " + points[1]);
-            spelare1.setText("P1 : " + points[0]);
+            playerTwo.setText("P2 : " + points[1]);
+            playerOne.setText("P1 : " + points[0]);
         }
     }
 
@@ -136,13 +136,13 @@ public class Client extends JFrame implements Runnable {
         if (message.startsWith("Welcome")) {
             message = message.substring(message.indexOf(' '));
             if (message.contains("1")) {
-                spelare1.setText(message);
+                playerOne.setText(message);
                 setTitle(message);
-                spelare2.setText("Player 2");
+                playerTwo.setText("Player 2");
             } else {
-                spelare2.setText(message);
+                playerTwo.setText(message);
                 setTitle(message);
-                spelare1.setText("Player 1");
+                playerOne.setText("Player 1");
             }
         } else if (message.startsWith("Wait")) {
             for (JButton button : buttons) {

@@ -77,16 +77,16 @@ public class ServerSideGame extends Thread {
     }
 
     private void sendPointsHistory() throws IOException {
-        ArrayList<List> listan = new ArrayList<>();
-        listan.add(getPlayerOne().scoreHistory);
-        //System.out.println("send points history test: " + listan);
-        listan.add(getPlayerTwo().scoreHistory);
-        //System.out.println("send points history test efter oponentplayer: " + listan);
+        ArrayList<List> histories = new ArrayList<>();
+        histories.add(getPlayerOne().scoreHistory);
+        //System.out.println("send points history test: " + histories);
+        histories.add(getPlayerTwo().scoreHistory);
+        //System.out.println("send points history test efter oponentplayer: " + histories);
 
         getPlayerOne().outputObject.reset();
-        getPlayerOne().outputObject.writeObject(listan);
+        getPlayerOne().outputObject.writeObject(histories);
         getPlayerTwo().outputObject.reset();
-        getPlayerTwo().outputObject.writeObject(listan);
+        getPlayerTwo().outputObject.writeObject(histories);
     }
 
     private void sendPoints() throws IOException {
@@ -157,9 +157,10 @@ public class ServerSideGame extends Thread {
     public synchronized boolean isRoundOver() {
         if (currentPlayer.questionNumber == questionsPerRound
                 && currentPlayer.getOpponent().questionNumber == questionsPerRound) {
-            currentPlayer.questionNumber = 0; // nollställer om rundan är över (Problemet är att det finns risk för
+            // nollställer om rundan är över (Problemet är att det finns risk för
             //  att man kan få samma fråga igen om man väljer samma kategori)
             // en annan lösning är att man endast nollställer om questionNumber når list.size()
+            currentPlayer.questionNumber = 0;
             currentPlayer.getOpponent().questionNumber = 0;
             ///currentRound++; ökar i selectCategory
             return true;

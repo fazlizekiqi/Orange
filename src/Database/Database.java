@@ -19,20 +19,20 @@ public class Database {
     private Category famous = new Category("catagoryFiles/FamousQuiz.txt");
     private Category random = new Category("catagoryFiles/RandomQuiz.txt");
 
-    public List<Question> getQuestions(String wantedCategory, int antalFrågor) {
+    public List<Question> getQuestions(String wantedCategory, int numberOfQuestions) {
         if (wantedCategory.equalsIgnoreCase("candy")) {
-            qwer += antalFrågor;
-            return candy.questions.subList(qwer, qwer + antalFrågor);
+            qwer += numberOfQuestions;
+            return candy.questions.subList(qwer, qwer + numberOfQuestions);
         } else if (wantedCategory.equalsIgnoreCase("egg")) {
-            qwer += antalFrågor;
-            return egg.questions.subList(qwer, qwer + antalFrågor);
+            qwer += numberOfQuestions;
+            return egg.questions.subList(qwer, qwer + numberOfQuestions);
         } else if (wantedCategory.equalsIgnoreCase("famous")) {
-            qwer += antalFrågor;
-            return famous.questions.subList(qwer, qwer + antalFrågor);
+            qwer += numberOfQuestions;
+            return famous.questions.subList(qwer, qwer + numberOfQuestions);
         } else {
-            qwer += antalFrågor;
+            qwer += numberOfQuestions;
         }
-        return random.questions.subList(qwer, qwer + antalFrågor);
+        return random.questions.subList(qwer, qwer + numberOfQuestions);
     }
 
     public static void main(String[] args) {
