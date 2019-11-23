@@ -26,10 +26,10 @@ public class ServerSideGame extends Thread {
         try {
             while (true) {
                 if (currentState == SELECTING_CATEGORY) {
-                    currentPlayer.oponentPlayer.outputObject.writeObject("Wait until other player chooses a category!");
+                    currentPlayer.opponent.outputObject.writeObject("Wait until other player chooses a category!");
                     choosingCategory();
                     currentState = ASKING_QUESTIONS;
-                    currentPlayer.oponentPlayer.outputObject.writeObject("Wait until other player answer");
+                    currentPlayer.opponent.outputObject.writeObject("Wait until other player answer");
                 } else if (currentState == ASKING_QUESTIONS) {
                     handleQuestions();
                     currentState = SWITCH_PLAYER;
@@ -50,7 +50,7 @@ public class ServerSideGame extends Thread {
     private void resetGame() throws IOException {
         if (isGameOver()) {
             currentPlayer.totPoints = 0;
-            currentPlayer.oponentPlayer.totPoints = 0;
+            currentPlayer.opponent.totPoints = 0;
             currentRound = currentRound % totalRounds;
             sendPoints();
             db.resetCount();
@@ -62,12 +62,12 @@ public class ServerSideGame extends Thread {
         if (currentPlayer.name.equalsIgnoreCase("Player 1")) {
             return currentPlayer;
         } else {
-            return currentPlayer.oponentPlayer;
+            return currentPlayer.opponent;
         }
     }
 
     private ServerSidePlayer getPlayerTwo() {
-        return getPlayerOne().oponentPlayer;
+        return getPlayerOne().opponent;
     }
 
     private void sendPointsHistory() throws IOException {
@@ -97,7 +97,7 @@ public class ServerSideGame extends Thread {
             System.out.println(questions.size());
         } else {
             switchPlayer();
-            currentPlayer.oponentPlayer.outputObject
+            currentPlayer.opponent.outputObject
                     .writeObject("Wait for the opponent");
             currentState = ASKING_QUESTIONS;
         }
@@ -135,26 +135,26 @@ public class ServerSideGame extends Thread {
 
     public void hasWinner() throws IOException {
         if (isGameOver()) {
-            if (currentPlayer.totPoints > currentPlayer.oponentPlayer.totPoints) {
+            if (currentPlayer.totPoints > currentPlayer.opponent.totPoints) {
                 currentPlayer.outputObject.writeObject("YOU WIN");
-                currentPlayer.oponentPlayer.outputObject.writeObject("YOU LOSE");
-            } else if (currentPlayer.totPoints < currentPlayer.oponentPlayer.totPoints) {
+                currentPlayer.opponent.outputObject.writeObject("YOU LOSE");
+            } else if (currentPlayer.totPoints < currentPlayer.opponent.totPoints) {
                 currentPlayer.outputObject.writeObject("YOU LOSE");
-                currentPlayer.oponentPlayer.outputObject.writeObject("YOU WIN");
+                currentPlayer.opponent.outputObject.writeObject("YOU WIN");
             } else {
                 currentPlayer.outputObject.writeObject("YOU TIED");
-                currentPlayer.oponentPlayer.outputObject.writeObject("YOU TIED");
+                currentPlayer.opponent.outputObject.writeObject("YOU TIED");
             }
         }
     }
 
     public synchronized boolean isRoundOver() {
         if (currentPlayer.questionNumber == questionsPerRound
-                && currentPlayer.oponentPlayer.questionNumber == questionsPerRound) {
+                && currentPlayer.opponent.questionNumber == questionsPerRound) {
             currentPlayer.questionNumber = 0; // nollställer om rundan är över (Problemet är att det finns risk för
             //  att man kan få samma fråga igen om man väljer samma kategori)
             // en annan lösning är att man endast nollställer om questionNumber når list.size()
-            currentPlayer.oponentPlayer.questionNumber = 0;
+            currentPlayer.opponent.questionNumber = 0;
             ///currentRound++; ökar i selectCategory
             return true;
         } else {
@@ -171,7 +171,7 @@ public class ServerSideGame extends Thread {
     }
 
     public synchronized void switchPlayer() {
-        currentPlayer = currentPlayer.oponentPlayer;
+        currentPlayer = currentPlayer.opponent;
     }
 
     public synchronized boolean allQuestionsAnswered() {
