@@ -150,16 +150,6 @@ public class ServerSideGame extends Thread {
         }
     }
 
-    public synchronized boolean isTie() {
-        if (isGameOver()) {
-            if (currentPlayer.totPoints == currentPlayer.oponentPlayer.totPoints) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-
     public synchronized boolean isRoundOver() {
         if (currentPlayer.questionNumber == questionsPerRound
                 && currentPlayer.oponentPlayer.questionNumber == questionsPerRound) {
@@ -174,7 +164,6 @@ public class ServerSideGame extends Thread {
         }
     }
 
-
     public synchronized boolean isGameOver() {
         if (currentRound == totalRounds) {
             //currentRound = 0; // nollställa currentRound???
@@ -182,7 +171,6 @@ public class ServerSideGame extends Thread {
         }
         return false;
     }
-
 
     public synchronized void switchPlayer() {
         currentPlayer = currentPlayer.oponentPlayer;
