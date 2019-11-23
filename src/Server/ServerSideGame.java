@@ -21,6 +21,11 @@ public class ServerSideGame extends Thread {
     private static final int ALL_QUESTIONS_ANSWERED = 3;
     private int currentState = SELECTING_CATEGORY;
 
+    ServerSideGame(int questionsPerRound, int totalRounds) {
+        this.questionsPerRound = questionsPerRound;
+        this.totalRounds = totalRounds;
+    }
+
     @Override
     public void run() {
         try {
@@ -109,7 +114,6 @@ public class ServerSideGame extends Thread {
         }
     }
 
-
     private void choosingCategory() throws IOException {
         currentPlayer.outputObject.writeObject("Choose category :");
         String category = currentPlayer.input.readLine();
@@ -134,12 +138,7 @@ public class ServerSideGame extends Thread {
         //   System.out.println(currentPlayer.scoreHistory.toString());
     }//handleQuestions
 
-    ServerSideGame(int questionsPerRound, int totalRounds) {
-        this.questionsPerRound = questionsPerRound;
-        this.totalRounds = totalRounds;
-    }
-
-    public void hasWinner() throws IOException {
+    private void hasWinner() throws IOException {
         if (isGameOver()) {
             if (currentPlayer.totPoints > currentPlayer.getOpponent().totPoints) {
                 currentPlayer.outputObject.writeObject("YOU WIN");
@@ -154,7 +153,7 @@ public class ServerSideGame extends Thread {
         }
     }
 
-    public synchronized boolean isRoundOver() {
+    private synchronized boolean isRoundOver() {
         if (currentPlayer.questionNumber == questionsPerRound
                 && currentPlayer.getOpponent().questionNumber == questionsPerRound) {
             // nollställer om rundan är över (Problemet är att det finns risk för
@@ -169,27 +168,23 @@ public class ServerSideGame extends Thread {
         }
     }
 
-    public synchronized boolean isGameOver() {
-        if (currentRound == totalRounds) {
-            //currentRound = 0; // nollställa currentRound???
-            return true;
-        }
-        return false;
+    private synchronized boolean isGameOver() {
+        return currentRound == totalRounds;
     }
 
-    public synchronized void switchPlayer() {
+    private synchronized void switchPlayer() {
         currentPlayer = currentPlayer.getOpponent();
     }
 
-    public synchronized boolean allQuestionsAnswered() {
+    private synchronized boolean allQuestionsAnswered() {
         return currentPlayer.questionNumber == questionsPerRound;
     }
 
-    public synchronized void nextQuestion() {
+    private synchronized void nextQuestion() {
         currentPlayer.questionNumber++;
     }
 
-    public synchronized void selectCategory(String categoryName) {
+    private synchronized void selectCategory(String categoryName) {
         questions = db.getQuestions(categoryName, questionsPerRound);
         currentRound++;
     }
