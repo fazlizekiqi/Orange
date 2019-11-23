@@ -8,7 +8,6 @@ import java.util.List;
 public class Database {
     int qwer = 0;
 
-
 //    Category candy = new Category("catagoryFiles\\CandyQuiz.txt");
 //    Category egg = new Category("catagoryFiles\\EggQuiz.txt");
 //    Category famous = new Category("catagoryFiles\\FamousQuiz.txt");
@@ -20,7 +19,6 @@ public class Database {
     Category famous = new Category("catagoryFiles/FamousQuiz.txt");
     Category random = new Category("catagoryFiles/RandomQuiz.txt");
 
-
     public List<Question> getQuestions(String wantedCategory, int antalFrågor) {
         if (wantedCategory.equalsIgnoreCase("candy")) {
             qwer += antalFrågor;
@@ -31,10 +29,10 @@ public class Database {
         } else if (wantedCategory.equalsIgnoreCase("famous")) {
             qwer += antalFrågor;
             return famous.questions.subList(qwer, qwer + antalFrågor);
-        } else
+        } else {
             qwer += antalFrågor;
+        }
         return random.questions.subList(qwer, qwer + antalFrågor);
-
     }
 
     public static void main(String[] args) {
@@ -44,6 +42,7 @@ public class Database {
     public void resetCount() {
         this.qwer = 0;
     }
+
     public void shuffleLists(){
         Collections.shuffle(candy.questions);
         Collections.shuffle(egg.questions);

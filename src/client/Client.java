@@ -50,20 +50,19 @@ public class Client extends JFrame implements Runnable {
         p.add(categoryChooser);
         p.add(categorybutton);
         centerPanel.add(label, BorderLayout.CENTER);
+
         for (int i = 0; i < buttons.length; i++) {
             buttons[i] = new JButton(strings[i]);
             buttons[i].addActionListener(alternativesListener);
             buttons[i].setEnabled(false);
             gridPanel.add(buttons[i]);
-
-
         }
+
         categorybutton.addActionListener(e -> {
             pw.println(categoryChooser.getSelectedItem());
             System.out.println("VALD KATEGORI" + categoryChooser.getSelectedItem());
             categoryChooser.setEnabled(false);
             categorybutton.setEnabled(false);
-
         });
 
         add(continueButton, BorderLayout.SOUTH);
@@ -79,12 +78,10 @@ public class Client extends JFrame implements Runnable {
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         thread.start();
-
     }//CONSTRUCTOR
 
     @Override
     public void run() {
-
         Object obj;
         continueButton.addActionListener(continueButtonListener);
 
@@ -107,15 +104,11 @@ public class Client extends JFrame implements Runnable {
                     for (List l : lista) System.out.println(l.toString());
                 }
             }//while
-
-        } catch (
-                IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
-        } catch (
-                ClassNotFoundException e) {
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-
     }//run()
 
     private void showTheQuestion(Question question) {
@@ -151,10 +144,9 @@ public class Client extends JFrame implements Runnable {
                 setTitle(message);
                 spelare1.setText("Player 1");
             }
-
         } else if (message.startsWith("Wait")) {
-            for (int i = 0; i < buttons.length; i++) {
-                buttons[i].setEnabled(false);
+            for (JButton button : buttons) {
+                button.setEnabled(false);
             }
             categoryChooser.setEnabled(false);
             categorybutton.setEnabled(false);
@@ -175,14 +167,11 @@ public class Client extends JFrame implements Runnable {
     String theAnswerFromUser;
     ActionListener continueButtonListener = e -> {
         continueButton.setVisible(false);
-        for (int i = 0; i < buttons.length; i++) {
-            buttons[i].setBackground(null);
+        for (JButton button : buttons) {
+            button.setBackground(null);
         }
-
-
         pw.println(theAnswerFromUser);
     };//cnt
-
 
     ActionListener alternativesListener = e -> {
         JButton temp = (JButton) e.getSource();
@@ -204,17 +193,16 @@ public class Client extends JFrame implements Runnable {
             temp.setBackground(Color.RED);
             temp.setOpaque(true);
 
-            for (int i = 0; i < buttons.length; i++) {
-                if (buttons[i].getText().equalsIgnoreCase(rightAnswer)) {
-                    buttons[i].setBackground(Color.green);
-                    buttons[i].setOpaque(true);
+            for (JButton button : buttons) {
+                if (button.getText().equalsIgnoreCase(rightAnswer)) {
+                    button.setBackground(Color.green);
+                    button.setOpaque(true);
                 }
             }
         }
     }//changeColor
 
     public static void main(String[] args) {
-
         try {
             new Client();
         } catch (IOException e) {

@@ -29,7 +29,6 @@ public class Server {
         totalRounds = Integer.parseInt(p.getProperty("rounds", "2"));
 
         while (true) {
-
             ServerSideGame game = new ServerSideGame(questionsPerRound, totalRounds);
 
             ServerSidePlayer player1 = new ServerSidePlayer(listener.accept(), "Player 1", game);
@@ -40,8 +39,6 @@ public class Server {
             player2.setOponentPlayer(player1);
 
             game.start();
-
-
         }
     }
 }

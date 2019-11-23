@@ -4,11 +4,9 @@ import question.Question;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 
 public class Category {
-
     ArrayList<Question> questions = new ArrayList<Question>();
 
     String firstLine;

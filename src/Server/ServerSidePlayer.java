@@ -1,14 +1,11 @@
 package Server;
 
-import question.Question;
-
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ServerSidePlayer {
-
     Socket socket;
     ServerSidePlayer oponentPlayer;
     int totPoints = 0;
@@ -39,6 +36,4 @@ public class ServerSidePlayer {
     public void setOponentPlayer(ServerSidePlayer oponentPlayer) {
         this.oponentPlayer = oponentPlayer;
     }
-
-
 }

@@ -5,14 +5,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class Question implements Serializable {
-
     static final long serialVersionUID = 42L;
     String question;
     String rightAnswer;
     public ArrayList<String> alternatives = new ArrayList<String>();
-
-    public Question() {
-    }
 
     public void setQuestion(String question) {
         this.question = question;

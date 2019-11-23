@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class ServerSideGame extends Thread {
 
     Database db = new Database();
@@ -16,7 +15,6 @@ public class ServerSideGame extends Thread {
     private int questionsPerRound;
     private int totalRounds;
     private int currentRound = 0;
-
 
     private static final int SELECTING_CATEGORY = 0;
     private static final int ASKING_QUESTIONS = 1;
@@ -27,9 +25,7 @@ public class ServerSideGame extends Thread {
     @Override
     public void run() {
         try {
-
             while (true) {
-
                 if (currentState == SELECTING_CATEGORY) {
                     currentPlayer.oponentPlayer.outputObject.writeObject("Wait until other player chooses a category!");
                     choosingCategory();
@@ -69,18 +65,16 @@ public class ServerSideGame extends Thread {
         if (!currentPlayer.name.equalsIgnoreCase("Player 1")) {
             playerOne = currentPlayer.oponentPlayer;
         }
-            ArrayList<List> listan = new ArrayList<>();
-            listan.add(playerOne.scoreHistory);
-            //System.out.println("send points history test: " + listan);
-            listan.add(playerOne.oponentPlayer.scoreHistory);
-            //System.out.println("send points history test efter oponentplayer: " + listan);
+        ArrayList<List> listan = new ArrayList<>();
+        listan.add(playerOne.scoreHistory);
+        //System.out.println("send points history test: " + listan);
+        listan.add(playerOne.oponentPlayer.scoreHistory);
+        //System.out.println("send points history test efter oponentplayer: " + listan);
 
-            currentPlayer.outputObject.reset();
-            currentPlayer.outputObject.writeObject(listan);
-            currentPlayer.oponentPlayer.outputObject.reset();
-            currentPlayer.oponentPlayer.outputObject.writeObject(listan);
-
-
+        currentPlayer.outputObject.reset();
+        currentPlayer.outputObject.writeObject(listan);
+        currentPlayer.oponentPlayer.outputObject.reset();
+        currentPlayer.oponentPlayer.outputObject.writeObject(listan);
     }
 
     private void sendPoints() throws IOException {
@@ -131,14 +125,10 @@ public class ServerSideGame extends Thread {
                 tempScore++;
             }
             currentPlayer.game.nextQuestion();// index ökar med 1
-        }
+        }//while
         currentPlayer.scoreHistory.add(tempScore);
-     //   System.out.println(currentPlayer.scoreHistory.toString());
-
-        tempScore = 0;
-        //while
+        //   System.out.println(currentPlayer.scoreHistory.toString());
     }//handleQuestions
-
 
     ServerSideGame(int questionsPerRound, int totalRounds) {
         this.questionsPerRound = questionsPerRound;
@@ -196,19 +186,15 @@ public class ServerSideGame extends Thread {
 
     public synchronized void switchPlayer() {
         currentPlayer = currentPlayer.oponentPlayer;
-
     }
-
 
     public synchronized boolean allQuestionsAnswered() {
         return currentPlayer.questionNumber == questionsPerRound;
     }
 
-
     public synchronized void nextQuestion() {
         currentPlayer.questionNumber++;
     }
-
 
     public synchronized void selectCatagory(String categoryName) {
         questions = db.getQuestions(categoryName, questionsPerRound);
