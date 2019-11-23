@@ -10,6 +10,19 @@ public class Question implements Serializable {
     private String rightAnswer;
     public ArrayList<String> alternatives = new ArrayList<>();
 
+    public ArrayList<String> getAlternatives() {
+        Collections.shuffle(alternatives);
+        return alternatives;
+    }
+
+    public String getQuestion() {
+        return question;
+    }
+
+    public String getRightAnswer() {
+        return rightAnswer;
+    }
+
     public void setQuestion(String question) {
         this.question = question;
     }
@@ -18,20 +31,7 @@ public class Question implements Serializable {
         this.rightAnswer = rightAnswer;
     }
 
-    public String getQuestion() {
-        return question;
-    }
-
     public boolean isRightAnswer(String s) {
         return s.equals(rightAnswer);
-    }
-
-    public ArrayList<String> getAlternatives() {
-        Collections.shuffle(alternatives);
-        return alternatives;
-    }
-
-    public String getRightAnswer() {
-        return rightAnswer;
     }
 }
