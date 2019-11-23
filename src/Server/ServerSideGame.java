@@ -113,7 +113,7 @@ public class ServerSideGame extends Thread {
     private void choosingCategory() throws IOException {
         currentPlayer.outputObject.writeObject("Choose category :");
         String category = currentPlayer.input.readLine();
-        currentPlayer.game.selectCategory(category);
+        selectCategory(category);
     }
 
     private void handleQuestions() throws IOException {
@@ -128,7 +128,7 @@ public class ServerSideGame extends Thread {
                 currentPlayer.totPoints++;
                 tempScore++;
             }
-            currentPlayer.game.nextQuestion();// index ökar med 1
+            nextQuestion();// index ökar med 1
         }//while
         currentPlayer.scoreHistory.add(tempScore);
         //   System.out.println(currentPlayer.scoreHistory.toString());

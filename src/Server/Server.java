@@ -31,8 +31,8 @@ public class Server {
         while (true) {
             ServerSideGame game = new ServerSideGame(questionsPerRound, totalRounds);
 
-            ServerSidePlayer player1 = new ServerSidePlayer(listener.accept(), "Player 1", game);
-            ServerSidePlayer player2 = new ServerSidePlayer(listener.accept(), "Player 2", game);
+            ServerSidePlayer player1 = new ServerSidePlayer(listener.accept(), "Player 1");
+            ServerSidePlayer player2 = new ServerSidePlayer(listener.accept(), "Player 2");
 
             game.setPlayers(player1, player2);
             game.start();

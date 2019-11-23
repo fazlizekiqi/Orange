@@ -10,15 +10,13 @@ public class ServerSidePlayer {
     int totPoints = 0;
     int questionNumber = 0;
     String name;
-    ServerSideGame game;
     List <Integer> scoreHistory = new ArrayList<>();
 
     BufferedReader input;
     ObjectOutputStream outputObject;
 
-    ServerSidePlayer(Socket socket, String name, ServerSideGame game) {
+    ServerSidePlayer(Socket socket, String name) {
         this.name = name;
-        this.game = game;
 
         try {
             outputObject = new ObjectOutputStream(socket.getOutputStream());
@@ -30,11 +28,11 @@ public class ServerSidePlayer {
         }
     }//Constructor
 
-    public ServerSidePlayer getOpponent() {
+    ServerSidePlayer getOpponent() {
         return this.opponent;
     }
 
-    public void setOpponent(ServerSidePlayer opponent) {
+    void setOpponent(ServerSidePlayer opponent) {
         this.opponent = opponent;
     }
 }
