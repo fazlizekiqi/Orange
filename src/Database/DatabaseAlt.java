@@ -6,6 +6,8 @@ import question.Question;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,6 +30,11 @@ public class DatabaseAlt {
         List<String> incorrect_answers;
 
         Question toRealQuestion() {
+            question = URLDecoder.decode(question, StandardCharsets.UTF_8);
+            correct_answer = URLDecoder.decode(correct_answer, StandardCharsets.UTF_8);
+            for (int i = 0; i < incorrect_answers.size(); i++) {
+                incorrect_answers.set(i, URLDecoder.decode(incorrect_answers.get(i), StandardCharsets.UTF_8));
+            }
             Question q = new Question();
             q.setQuestion(question);
             q.setRightAnswer(correct_answer);
@@ -69,6 +76,7 @@ public class DatabaseAlt {
                     "https://opentdb.com/api.php?amount="
                             + numberOfQuestions
                             + "&category=" + categoryId
+                            + "&encode=url3986"
                             + "&type=multiple"
                             + "&token=" + apiToken);
             QuestionResponse qr = deserializer.fromJson(
