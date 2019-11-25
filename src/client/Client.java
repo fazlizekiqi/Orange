@@ -102,8 +102,9 @@ public class Client extends JFrame implements Runnable {
                     ArrayList<java.util.List> lista = (ArrayList) obj;
                     List<Integer> playerOneHistory = lista.get(0);
                     List<Integer> playerTwoHistory = lista.get(1);
-                    playerOne.setText(getScoreSummary("Spelare 1", playerOneHistory));
-                    playerTwo.setText(getScoreSummary("Spelare 2", playerTwoHistory));
+                    String playerOneText = getScoreSummary("Spelare 1", playerOneHistory);
+                    String playerTwoText = getScoreSummary("Spelare 2", playerTwoHistory);
+                    JOptionPane.showMessageDialog(this, playerOneText + "\n\n" + playerTwoText);
                 }
             }//while
         } catch (IOException e) {
@@ -211,7 +212,7 @@ public class Client extends JFrame implements Runnable {
             sum += scores.get(i);
             s.append(String.format("\nRond %d: %d", i + 1, scores.get(i)));
         }
-        s.append("\n\nSumma: ");
+        s.append("\n\nSumma: " + sum);
         return s.toString();
     }
 
