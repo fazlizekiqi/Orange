@@ -202,6 +202,17 @@ public class Client extends JFrame implements Runnable {
         }
     }//changeColor
 
+    String getScoreSummary(String playerName, List<Integer> scores) {
+        StringBuilder s = new StringBuilder(playerName + ":");
+        int sum = 0;
+        for (int i = 0; i < scores.size(); i++) {
+            sum += scores.get(i);
+            s.append(String.format("\nRond %d: %d", i + 1, scores.get(i)));
+        }
+        s.append("\n\nSumma: ");
+        return s.toString();
+    }
+
     public static void main(String[] args) {
         try {
             new Client();
