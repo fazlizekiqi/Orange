@@ -97,11 +97,13 @@ public class Client extends JFrame implements Runnable {
                 } else if (obj instanceof Integer[]) {
                     Integer[] points = (Integer[]) obj;
                     showThePoints(points);
-
                 } else if (obj instanceof ArrayList) {
-                    ArrayList<java.util.List> lista;
-                    lista = (ArrayList) obj;
-                    for (List l : lista) System.out.println(l.toString());
+                    // Kontrollera typer!
+                    ArrayList<java.util.List> lista = (ArrayList) obj;
+                    List<Integer> playerOneHistory = lista.get(0);
+                    List<Integer> playerTwoHistory = lista.get(1);
+                    playerOne.setText(getScoreSummary("Spelare 1", playerOneHistory));
+                    playerTwo.setText(getScoreSummary("Spelare 2", playerTwoHistory));
                 }
             }//while
         } catch (IOException e) {

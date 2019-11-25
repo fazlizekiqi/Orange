@@ -41,7 +41,7 @@ public class ServerSideGame extends Thread {
                 } else if (currentState == SWITCH_PLAYER) {
                     switchingPlayer();
                 } else if (currentState == ALL_QUESTIONS_ANSWERED) {
-                    sendPoints();
+                    //sendPoints();
                     sendPointsHistory();
                     hasWinner();
                     resetGame();
@@ -57,7 +57,7 @@ public class ServerSideGame extends Thread {
             currentPlayer.totPoints = 0;
             currentPlayer.getOpponent().totPoints = 0;
             currentRound = currentRound % totalRounds;
-            sendPoints();
+            //sendPoints();
             db.resetCount();
             db.shuffleLists();
         }
