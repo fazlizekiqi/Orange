@@ -21,15 +21,18 @@ public class Client extends JFrame implements Runnable {
     private final String[] colors = {"Candy", "Egg", "Famous", "Random"};
     private JComboBox categoryChooser;
     private JPanel p = new JPanel();
+    private JTextArea label = new JTextArea();
 
     private JButton categorybutton = new JButton("Start Game");
     private JButton continueButton = new JButton("Continue");
     private JButton[] buttons = new JButton[4];
     private String[] strings = {"Allan", "Fazli Zekiqi", "Victor J", "Victor O"};
-    private JLabel label = new JLabel("Welcome to the Quiz Fight", SwingConstants.CENTER);
+    //private JLabel label = new JLabel("Welcome to the Quiz Fight", SwingConstants.CENTER);
     private JLabel playerOne = new JLabel("s1");
     private JLabel playerTwo = new JLabel("s2");
     private JPanel gridPanel = new JPanel(new GridLayout(2, 2));
+    private JPanel panelLeft = new JPanel();
+    private JPanel panelRight = new JPanel();
     private JPanel centerPanel = new JPanel(new BorderLayout());
     private Thread thread = new Thread(this);
     int counter;
@@ -55,6 +58,8 @@ public class Client extends JFrame implements Runnable {
             buttons[i] = new JButton(strings[i]);
             buttons[i].addActionListener(alternativesListener);
             buttons[i].setEnabled(false);
+            buttons[i].setBackground(Color.BLACK);
+            buttons[i].setForeground(Color.WHITE);
             gridPanel.add(buttons[i]);
         }
 
@@ -67,14 +72,32 @@ public class Client extends JFrame implements Runnable {
 
         add(continueButton, BorderLayout.SOUTH);
         continueButton.setVisible(false);
-        add(playerOne, BorderLayout.WEST);
-        add(playerTwo, BorderLayout.EAST);
+        panelLeft.add(playerOne);
+        panelRight.add(playerTwo);
+        panelLeft.setBackground(Color.ORANGE);
+        panelRight.setBackground(Color.ORANGE);
+        add(panelLeft, BorderLayout.WEST);
+        add(panelRight, BorderLayout.EAST);
 
+        playerTwo.setBackground(Color.ORANGE);
         centerPanel.add(gridPanel, BorderLayout.SOUTH);
         add(centerPanel, BorderLayout.CENTER);
         add(p, BorderLayout.NORTH);
 
-        setSize(500, 500);
+        label.setEnabled(false);
+        label.setLineWrap(true);
+        label.setDisabledTextColor(Color.BLACK);
+        label.setBackground(Color.ORANGE);
+        label.setForeground(Color.BLACK);
+
+        label.setFont(label.getFont().deriveFont(15.0f));
+
+
+        p.setBackground(Color.ORANGE);
+        gridPanel.setBackground(Color.ORANGE);
+        centerPanel.setBackground(Color.ORANGE);
+        setBackground(Color.ORANGE);
+        setSize(700, 600);
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         thread.start();
@@ -116,7 +139,7 @@ public class Client extends JFrame implements Runnable {
 
     private void showTheQuestion(Question question) {
         System.out.println(question.getQuestion());
-        label.setText(question.getQuestion());
+        label.setText("\n\n\n\n\n\n             " + question.getQuestion());
         ArrayList<String> alt = question.getAlternatives();
         rightAnswer = question.getRightAnswer();
         for (int i = 0; i < alt.size(); i++) {
@@ -153,7 +176,7 @@ public class Client extends JFrame implements Runnable {
             }
             categoryChooser.setEnabled(false);
             categorybutton.setEnabled(false);
-            label.setText(message);
+            label.setText("\n\n\n\n\n\n\n                    " + message);
         } else if (message.startsWith("YOU WIN")) {
             JOptionPane.showMessageDialog(this, "YOU WIN", "Congratulations", JOptionPane.INFORMATION_MESSAGE);
         } else if (message.startsWith("YOU LOSE")) {
@@ -163,7 +186,7 @@ public class Client extends JFrame implements Runnable {
         } else {
             categorybutton.setEnabled(true);
             categoryChooser.setEnabled(true);
-            label.setText(message);
+            label.setText("\n\n\n\n\n\n                     " + message);
         }
     }//showTheMessageFromTheServer
 
@@ -171,7 +194,7 @@ public class Client extends JFrame implements Runnable {
     private ActionListener continueButtonListener = e -> {
         continueButton.setVisible(false);
         for (JButton button : buttons) {
-            button.setBackground(null);
+            button.setBackground(Color.BLACK);
         }
         pw.println(theAnswerFromUser);
     };//cnt
