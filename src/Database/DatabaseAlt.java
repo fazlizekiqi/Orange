@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class DatabaseAlt {
-    class QuestionResponse {
+    static class QuestionResponse {
         int response_code;
         List<SerializedQuestion> results;
 
@@ -23,7 +23,7 @@ public class DatabaseAlt {
         }
     }
 
-    class SerializedQuestion {
+    static class SerializedQuestion {
         String category;
         String question;
         String correct_answer;
@@ -44,17 +44,17 @@ public class DatabaseAlt {
         }
     }
 
-    class TokenResponse {
+    /*class TokenResponse {
         private int response_code;
         private String response_message;
         private String token;
-    }
+    }*/
 
     Gson deserializer = new Gson();
-    String apiToken;
+    //String apiToken;
 
     public DatabaseAlt() {
-        try {
+        /*try {
             URL tokenRequestURL = new URL("https://opentdb.com/api_token.php?command=request");
             TokenResponse tr = deserializer.fromJson(
                     new InputStreamReader(
@@ -66,7 +66,7 @@ public class DatabaseAlt {
                 throw new IOException();
         } catch (IOException ioe) {
             ioe.printStackTrace();
-        }
+        }*/
     }
 
     public List<Question> getQuestions(String wantedCategory, int numberOfQuestions) {
@@ -78,7 +78,7 @@ public class DatabaseAlt {
                             + "&category=" + categoryId
                             + "&encode=url3986"
                             + "&type=multiple"
-                            + "&token=" + apiToken);
+                            /*+ "&token=" + apiToken*/);
             QuestionResponse qr = deserializer.fromJson(
                     new InputStreamReader(
                             questionRequest.openStream()),
